@@ -21,8 +21,13 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import { Audiowide } from "next/font/google";
 import { useState } from "react";
 
+const audiowide = Audiowide({
+  subsets: ["latin"],
+  weight: "400", // Use the correct weight for your font
+});
 // Enhanced Animated Background with Particles
 import { useAnimation, useMotionValue } from "framer-motion";
 import React, { useCallback, useEffect } from "react";
@@ -358,8 +363,8 @@ const AnimatedBackground = () => {
 const FormInput = ({ label, type = "text", icon: Icon, error, ...props }) => (
   <motion.div
     className="relative"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
+    // initial={{ opacity: 0, y: 20 }}
+    // animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
   >
     <label className="text-cyan-300 text-sm mb-1 block transform transition-all">
@@ -377,7 +382,7 @@ const FormInput = ({ label, type = "text", icon: Icon, error, ...props }) => (
       />
       <motion.div
         className="absolute inset-0 border border-cyan-400 rounded-lg opacity-0 scale-105"
-        animate={props.value ? { opacity: 0.2 } : { opacity: 0 }}
+        // animate={props.value ? { opacity: 0.2 } : { opacity: 0 }}
         transition={{ duration: 0.2 }}
       />
     </div>
@@ -496,27 +501,20 @@ const IdeathonForm = ({ handleSubmit }) => {
   });
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [glitchEffect, setGlitchEffect] = useState(false);
   const [scanline, setScanline] = useState(0);
   const [powerLevel, setPowerLevel] = useState(0);
 
   // Cyberpunk animation effects
   useEffect(() => {
-    const glitchInterval = setInterval(() => {
-      setGlitchEffect(true);
-      setTimeout(() => setGlitchEffect(false), 150);
-    }, 3000);
-
     const scanInterval = setInterval(() => {
       setScanline((prev) => (prev + 1) % 100);
-    }, 30);
+    }, 3000);
 
     const powerInterval = setInterval(() => {
       setPowerLevel((prev) => (prev + 1) % 100);
     }, 50);
 
     return () => {
-      clearInterval(glitchInterval);
       clearInterval(scanInterval);
       clearInterval(powerInterval);
     };
@@ -525,9 +523,9 @@ const IdeathonForm = ({ handleSubmit }) => {
   const HexagonDecoration = ({ position, delay = 0 }) => (
     <motion.div
       className={`absolute ${position} w-12 h-12`}
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 0.15, scale: 1 }}
-      transition={{ delay, duration: 1 }}
+      // initial={{ opacity: 0, scale: 0 }}
+      // animate={{ opacity: 0.15, scale: 1 }}
+      // transition={{ delay, duration: 1 }}
     >
       <div className="w-full h-full relative">
         <div className="absolute inset-0 border-2 border-cyan-500/30 rotate-45 transform-gpu" />
@@ -536,38 +534,56 @@ const IdeathonForm = ({ handleSubmit }) => {
     </motion.div>
   );
 
-  const CyberButton = ({ children, onClick, className = "" }) => (
-    <motion.button
-      onClick={onClick}
-      className={`
-        relative group overflow-hidden
-        px-6 py-2 rounded-sm
-        bg-black border border-cyan-500/50
-        text-cyan-500 hover:text-cyan-400
-        transition-colors duration-300
-        ${className}
-      `}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-transparent" />
-        <div
-          className="absolute top-0 left-0 w-2 h-full bg-cyan-500/30 skew-x-[45deg] transform-gpu"
-          style={{ animation: "moveGlow 2s linear infinite" }}
+  const CyberButton = ({ children, onClick, className = "" }) => {
+    return (
+      <motion.button
+        onClick={onClick}
+        className={`
+          relative group overflow-hidden
+          px-6 py-2 rounded-sm
+          bg-black border border-cyan-500/50
+          text-cyan-500 transition-colors duration-300
+          ${className}
+        `}
+        whileTap={{ scale: 0.98 }}
+      >
+        {/* Smooth Continuous Glow Effect */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"
+          initial={{ x: "-100%" }}
+          animate={{
+            x: ["-100%", "100%"],
+            transition: {
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "linear",
+            },
+          }}
         />
-      </div>
-      <div className="relative flex items-center gap-2">{children}</div>
-    </motion.button>
-  );
+
+        {/* Thin Strip Moving Across */}
+        <motion.div
+          className="absolute top-0 left-0 w-2 h-full bg-cyan-500/50 skew-x-[45deg]"
+          initial={{ x: "-100%" }}
+          animate={{
+            x: ["-100%", "100%"],
+            transition: {
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "linear",
+            },
+          }}
+        />
+
+        <div className="relative flex items-center gap-2">{children}</div>
+      </motion.button>
+    );
+  };
 
   const InputField = ({ label, icon: Icon, ...props }) => (
-    <motion.div
-      className="relative group"
-      initial={{ x: -20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
+    <motion.div className="relative group">
       <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/50 to-cyan-500/0 opacity-0 group-hover:opacity-100 rounded-sm transition duration-500" />
       <div className="relative bg-black/80 border border-cyan-500/30 rounded-sm">
         <label className="flex items-center gap-2 text-cyan-500 text-sm px-4 py-2 border-b border-cyan-500/30">
@@ -595,8 +611,8 @@ const IdeathonForm = ({ handleSubmit }) => {
       ].map((tech, index) => (
         <motion.div
           key={tech}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          // initial={{ opacity: 0, y: 20 }}
+          // animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
           onClick={() => {
             const newStack = formData.techStack.includes(tech)
@@ -639,210 +655,196 @@ const IdeathonForm = ({ handleSubmit }) => {
   );
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4">
-      <style>
-        {`
+    <div className={audiowide.className}>
+      <div className="min-h-screen w-full flex items-center justify-center p-4">
+        <style>
+          {`
           @keyframes moveGlow {
             from { transform: translateX(-100%) skewX(45deg); }
             to { transform: translateX(200%) skewX(45deg); }
           }
-          @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-          }
-          .cyber-glitch {
-            animation: glitch 0.2s ease-in-out infinite;
-          }
+
         `}
-      </style>
+        </style>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentStep}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="w-full max-w-2xl relative"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent opacity-50" />
-          <div
-            className={`relative backdrop-blur-sm bg-black/70 p-8 border border-cyan-500/30 rounded-sm ${
-              glitchEffect ? "cyber-glitch" : ""
-            }`}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="w-full max-w-2xl relative"
           >
-            <PowerIndicator />
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent opacity-50" />
+            <div
+              className={`relative backdrop-blur-sm bg-black/70 p-8 border border-cyan-500/30 rounded-sm
+            }`}
+            >
+              <PowerIndicator />
 
-            {/* Decorative elements */}
-            <HexagonDecoration position="top-0 left-0 -translate-x-1/2 -translate-y-1/2" />
-            <HexagonDecoration
-              position="top-0 right-0 translate-x-1/2 -translate-y-1/2"
-              delay={0.2}
-            />
-            <HexagonDecoration
-              position="bottom-0 left-0 -translate-x-1/2 translate-y-1/2"
-              delay={0.4}
-            />
-            <HexagonDecoration
-              position="bottom-0 right-0 translate-x-1/2 translate-y-1/2"
-              delay={0.6}
-            />
-
-            {/* Header */}
-            <div className="relative mb-8">
-              <motion.div
-                className="flex items-center justify-center gap-4"
-                initial={{ y: -20 }}
-                animate={{ y: 0 }}
-              >
-                <Terminal className="w-6 h-6 text-cyan-500" />
-                <h1 className="text-3xl font-bold text-cyan-500">
-                  CYBER//FORM
-                </h1>
-                <Power className="w-6 h-6 text-cyan-500" />
-              </motion.div>
-            </div>
-
-            {/* Progress indicator */}
-            <div className="relative w-full h-1 bg-black mb-8 overflow-hidden">
-              <motion.div
-                className="absolute top-0 left-0 h-full bg-cyan-500"
-                style={{ width: `${(currentStep / 3) * 100}%` }}
+              {/* Decorative elements */}
+              <HexagonDecoration position="top-0 left-0 -translate-x-1/2 -translate-y-1/2" />
+              <HexagonDecoration
+                position="top-0 right-0 translate-x-1/2 -translate-y-1/2"
+                delay={0.2}
               />
-              <div
-                className="absolute top-0 left-0 w-full h-full"
-                style={{
-                  background: `linear-gradient(90deg,
+              <HexagonDecoration
+                position="bottom-0 left-0 -translate-x-1/2 translate-y-1/2"
+                delay={0.4}
+              />
+              <HexagonDecoration
+                position="bottom-0 right-0 translate-x-1/2 translate-y-1/2"
+                delay={0.6}
+              />
+
+              {/* Header */}
+              <div className="relative mb-8">
+                <motion.div
+                  className="flex items-center justify-center gap-4"
+                  initial={{ y: -20 }}
+                  animate={{ y: 0 }}
+                >
+                  <Terminal className="w-6 h-6 text-cyan-500" />
+                  <h1 className="text-3xl font-bold text-cyan-500">
+                    CYBER//FORM
+                  </h1>
+                  <Power className="w-6 h-6 text-cyan-500" />
+                </motion.div>
+              </div>
+
+              {/* Progress indicator */}
+              <div className="relative w-full h-1 bg-black mb-8 overflow-hidden">
+                <motion.div
+                  className="absolute top-0 left-0 h-full bg-cyan-500"
+                  style={{ width: `${(currentStep / 3) * 100}%` }}
+                />
+                <div
+                  className="absolute top-0 left-0 w-full h-full"
+                  style={{
+                    background: `linear-gradient(90deg,
                     transparent ${scanline - 5}%,
                     rgba(0, 255, 255, 0.5) ${scanline}%,
                     transparent ${scanline + 5}%)`,
-                }}
-              />
-            </div>
+                  }}
+                />
+              </div>
 
-            {/* Form steps */}
-            <div className="space-y-6">
-              {currentStep === 1 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <InputField
-                    label="TEAM IDENTIFIER"
-                    icon={Hash}
-                    placeholder="Enter identifier"
-                    value={formData.teamIdentifier}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        teamIdentifier: e.target.value,
-                      })
-                    }
-                  />
-                  <InputField
-                    label="ACCESS CODE"
-                    icon={Shield}
-                    type="password"
-                    placeholder="Enter access code"
-                    value={formData.accessCode}
-                    onChange={(e) =>
-                      setFormData({ ...formData, accessCode: e.target.value })
-                    }
-                  />
-                </motion.div>
-              )}
-
-              {currentStep === 2 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <InputField
-                    label="PROJECT DESIGNATION"
-                    icon={CircuitBoard}
-                    placeholder="Enter project title"
-                    value={formData.projectTitle}
-                    onChange={(e) =>
-                      setFormData({ ...formData, projectTitle: e.target.value })
-                    }
-                  />
-                  <div className="relative group">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/50 to-cyan-500/0 opacity-0 group-hover:opacity-100 rounded-sm transition duration-500" />
-                    <div className="relative bg-black/80 border border-cyan-500/30 rounded-sm">
-                      <label className="flex items-center gap-2 text-cyan-500 text-sm px-4 py-2 border-b border-cyan-500/30">
-                        <Code2 className="w-4 h-4" />
-                        IMPLEMENTATION SPECS
-                      </label>
-                      <textarea
-                        className="w-full px-4 py-3 bg-transparent text-cyan-400 placeholder-cyan-500/30 focus:outline-none h-32 resize-none"
-                        placeholder="Detail your implementation..."
-                        value={formData.implementation}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            implementation: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {currentStep === 3 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <label className="flex items-center gap-2 text-cyan-500 text-sm">
-                    <Webhook className="w-4 h-4" />
-                    TECH STACK INTEGRATION
-                  </label>
-                  <TechStackGrid />
-                </motion.div>
-              )}
-
-              <div className="flex justify-between mt-8">
-                {currentStep > 1 && (
-                  <CyberButton
-                    onClick={() => setCurrentStep((prev) => prev - 1)}
+              {/* Form steps */}
+              <div className="space-y-6">
+                {currentStep === 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-6"
                   >
-                    <Signal className="w-4 h-4" />
-                    BACK
-                  </CyberButton>
+                    <InputField
+                      label="TEAM IDENTIFIER"
+                      icon={Hash}
+                      placeholder="Enter identifier"
+                      value={formData.teamIdentifier}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          teamIdentifier: e.target.value,
+                        })
+                      }
+                    />
+                    <InputField
+                      label="ACCESS CODE"
+                      icon={Shield}
+                      type="password"
+                      placeholder="Enter access code"
+                      value={formData.accessCode}
+                      onChange={(e) =>
+                        setFormData({ ...formData, accessCode: e.target.value })
+                      }
+                    />
+                  </motion.div>
                 )}
-                <CyberButton
-                  onClick={() =>
-                    currentStep < 3 ? setCurrentStep((prev) => prev + 1) : null
-                  }
-                  className="ml-auto"
-                >
-                  {currentStep === 3 ? (
-                    <>
-                      <Cpu className="w-4 h-4" />
-                      INITIALIZE
-                    </>
-                  ) : (
-                    <>
-                      <Radio className="w-4 h-4" />
-                      PROCEED
-                    </>
+
+                {currentStep === 2 && (
+                  <motion.div className="space-y-6">
+                    <InputField
+                      label="PROJECT DESIGNATION"
+                      icon={CircuitBoard}
+                      placeholder="Enter project title"
+                      value={formData.projectTitle}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          projectTitle: e.target.value,
+                        })
+                      }
+                    />
+                    <div className="relative group">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/50 to-cyan-500/0 opacity-0 group-hover:opacity-100 rounded-sm transition duration-500" />
+                      <div className="relative bg-black/80 border border-cyan-500/30 rounded-sm">
+                        <label className="flex items-center gap-2 text-cyan-500 text-sm px-4 py-2 border-b border-cyan-500/30">
+                          <Code2 className="w-4 h-4" />
+                          IMPLEMENTATION SPECS
+                        </label>
+                        <textarea
+                          className="w-full px-4 py-3 bg-transparent text-cyan-400 placeholder-cyan-500/30 focus:outline-none h-32 resize-none"
+                          placeholder="Detail your implementation..."
+                          value={formData.implementation}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              implementation: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {currentStep === 3 && (
+                  <motion.div className="space-y-6">
+                    <label className="flex items-center gap-2 text-cyan-500 text-sm">
+                      <Webhook className="w-4 h-4" />
+                      TECH STACK INTEGRATION
+                    </label>
+                    <TechStackGrid />
+                  </motion.div>
+                )}
+
+                <div className="flex justify-between mt-8">
+                  {currentStep > 1 && (
+                    <CyberButton
+                      onClick={() => setCurrentStep((prev) => prev - 1)}
+                    >
+                      <Signal className="w-4 h-4" />
+                      BACK
+                    </CyberButton>
                   )}
-                </CyberButton>
+                  <CyberButton
+                    onClick={() =>
+                      currentStep < 3
+                        ? setCurrentStep((prev) => prev + 1)
+                        : null
+                    }
+                    className="ml-auto"
+                  >
+                    {currentStep === 3 ? (
+                      <>
+                        <Cpu className="w-4 h-4" />
+                        INITIALIZE
+                      </>
+                    ) : (
+                      <>
+                        <Radio className="w-4 h-4" />
+                        PROCEED
+                      </>
+                    )}
+                  </CyberButton>
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
@@ -1172,7 +1174,7 @@ const TechXtremeApp = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="relative z-10 w-full max-w-md"
+                className="fixed inset-0 w-full h-full z-10"
               >
                 {activeRegistration === "ideathon" && (
                   <IdeathonForm onSubmit={handleSubmit} />

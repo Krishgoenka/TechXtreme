@@ -3,19 +3,27 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   Award,
+  Badge,
   BookOpen,
   Brain,
   Camera,
   Code,
+  Gift,
   Github,
   Globe,
   Heart,
+  Laugh,
   Lightbulb,
   Mail,
+  MessageCircle,
+  Mic,
   Music,
   Phone,
+  Plus,
   Rocket,
+  Star,
   Ticket,
+  Trophy,
   User,
   Users,
   Zap,
@@ -1010,6 +1018,7 @@ const TechXtremeApp = () => {
   const [activeRegistration, setActiveRegistration] = useState(null);
   const [registrationType, setRegistrationType] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [showCulturalEvents, setShowCulturalEvents] = useState(false);
 
   const handleSubmit = (formData) => {
     console.log("Form submitted:", formData);
@@ -1052,70 +1061,118 @@ const TechXtremeApp = () => {
           </motion.div>
         ) : (
           <>
-            {!activeRegistration ? (
+            {!activeRegistration && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="relative z-10 max-w-6xl"
               >
-                <h1 className="text-7xl font-extralight mb-12 text-white tracking-wider animate-fade-in-up text-center">
-                  <span className="text-white font-thin">TECH</span>
-                  <span className="text-cyan-400 font-light">XTREME</span>
-                </h1>
-                <div className="grid grid-cols-2 gap-8 mb-16">
-                  <EventCard
-                    title="IdeaThon"
-                    description="Innovative problem-solving marathon. Collaborative tech challenges driving breakthrough solutions across emerging technological domains."
-                    icon={Lightbulb}
-                    features={[
-                      { icon: Code, text: "Coding Challenges" },
-                      { icon: Brain, text: "Problem Solving" },
-                      { icon: Rocket, text: "Innovation" },
-                      { icon: Globe, text: "Global Participation" },
-                    ]}
-                    onClick={() => setActiveRegistration("ideathon")}
-                    variant="primary"
-                  />
-                  <EventCard
-                    title="Cultural Fest"
-                    description="A celebration of culture, art, and creativity. Showcase your talents in music, dance, drama, and more."
-                    icon={Music}
-                    features={[
-                      { icon: Ticket, text: "Performances" },
-                      { icon: Camera, text: "Photography" },
-                      { icon: Heart, text: "Cultural Exchange" },
-                      { icon: BookOpen, text: "Storytelling" },
-                    ]}
-                    onClick={() => setActiveRegistration("cultural")}
-                    variant="secondary"
-                  />
-                </div>
-                <div className="flex justify-center space-x-8 animate-fade-in-up">
-                  <button
-                    onClick={() => setActiveRegistration("ideathon")}
-                    className="relative px-12 py-6 rounded-lg font-medium tracking-wider uppercase text-sm text-white shadow-[0_4px_10px_rgba(0,255,255,0.5)] transition-all duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30
-    before:absolute before:inset-0 before:bg-gradient-to-r before:from-cyan-700 before:to-cyan-600 before:opacity-0 before:transition-opacity before:duration-500 before:hover:opacity-100 overflow-hidden"
-                  >
-                    <span className="relative z-10 flex items-center">
-                      <Award className="mr-3 inline" strokeWidth={1.5} />
-                      Ideathon Registration
-                    </span>
-                  </button>
+                {!showCulturalEvents ? (
+                  <>
+                    <h1 className="text-7xl font-extralight mb-12 text-white tracking-wider animate-fade-in-up text-center">
+                      <span className="text-white font-thin">TECH</span>
+                      <span className="text-cyan-400 font-light">XTREME</span>
+                    </h1>
 
-                  <button
-                    onClick={() => setActiveRegistration("cultural")}
-                    className="relative px-12 py-6 rounded-lg font-medium tracking-wider uppercase text-sm text-white shadow-[0_4px_10px_rgba(128,0,128,0.5)] transition-all duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30
+                    <div className="grid grid-cols-2 gap-8 mb-16">
+                      <EventCard
+                        title="IdeaThon"
+                        description="Innovative problem-solving marathon. Collaborative tech challenges driving breakthrough solutions across emerging technological domains."
+                        icon={Lightbulb}
+                        features={[
+                          { icon: Code, text: "Coding Challenges" },
+                          { icon: Brain, text: "Problem Solving" },
+                          { icon: Rocket, text: "Innovation" },
+                          { icon: Globe, text: "Global Participation" },
+                        ]}
+                        onClick={() => setActiveRegistration("ideathon")}
+                        variant="primary"
+                      />
+                      <EventCard
+                        title="Cultural Fest"
+                        description="A celebration of culture, art, and creativity. Showcase your talents in music, dance, drama, and more."
+                        icon={Music}
+                        features={[
+                          { icon: Ticket, text: "Performances" },
+                          { icon: Camera, text: "Photography" },
+                          { icon: Heart, text: "Cultural Exchange" },
+                          { icon: BookOpen, text: "Storytelling" },
+                        ]}
+                        onClick={() => setShowCulturalEvents(true)}
+                        variant="secondary"
+                      />
+                    </div>
+
+                    <div className="flex justify-center space-x-8 animate-fade-in-up">
+                      <button
+                        onClick={() => setActiveRegistration("ideathon")}
+                        className="relative px-12 py-6 rounded-lg font-medium tracking-wider uppercase text-sm text-white shadow-[0_4px_10px_rgba(0,255,255,0.5)] transition-all duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30
+    before:absolute before:inset-0 before:bg-gradient-to-r before:from-cyan-700 before:to-cyan-600 before:opacity-0 before:transition-opacity before:duration-500 before:hover:opacity-100 overflow-hidden"
+                      >
+                        <span className="relative z-10 flex items-center">
+                          <Award className="mr-3 inline" strokeWidth={1.5} />
+                          Ideathon Registration
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={() => setShowCulturalEvents(true)}
+                        className="relative px-12 py-6 rounded-lg font-medium tracking-wider uppercase text-sm text-white shadow-[0_4px_10px_rgba(128,0,128,0.5)] transition-all duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30
     before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-700 before:to-purple-600 before:opacity-0 before:transition-opacity before:duration-500 before:hover:opacity-100 overflow-hidden"
-                  >
-                    <span className="relative z-10 flex items-center">
-                      <Users className="mr-3 inline" strokeWidth={1.5} />
-                      Cultural Fest Registration
-                    </span>
-                  </button>
-                </div>
+                      >
+                        <span className="relative z-10 flex items-center">
+                          <Users className="mr-3 inline" strokeWidth={1.5} />
+                          Cultural Fest Registration
+                        </span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-10">
+                    <EventCard
+                      title="GenAI Study Jams Swags"
+                      description="Distribution of official merchandise from Google for securing Top 80 spot in GenAI Study Jams"
+                      icon={Gift}
+                      features={[
+                        { icon: Trophy, text: "Top 80 Achievers" },
+                        { icon: Gift, text: "Exclusive Google Merch" },
+                        { icon: Badge, text: "Official Recognition" },
+                        { icon: Star, text: "Elite Performer Status" },
+                      ]}
+                      onClick={() => setActiveRegistration("genai")}
+                      variant="primary"
+                    />
+                    <EventCard
+                      title="Cultural Programs"
+                      description="Join our vibrant cultural showcases, featuring music, dance, standup, and much more!"
+                      icon={Music}
+                      features={[
+                        { icon: Mic, text: "Live Performances" },
+                        { icon: Laugh, text: "Standup Comedy" },
+                        { icon: Globe, text: "Cultural Diversity" },
+                        { icon: Plus, text: "Surprise Events" },
+                      ]}
+                      onClick={() => setActiveRegistration("cultural")}
+                      variant="secondary"
+                    />
+                    <EventCard
+                      title="Attendee Registration"
+                      description="Register to be part of the TechXtreme experience as an audience member."
+                      icon={Users}
+                      features={[
+                        { icon: Ticket, text: "Free Entry" },
+                        { icon: MessageCircle, text: "Networking" },
+                      ]}
+                      onClick={() => setActiveRegistration("audience")}
+                      variant="primary"
+                    />
+                  </div>
+                )}
               </motion.div>
-            ) : (
+            )}
+
+            {activeRegistration && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -1142,5 +1199,4 @@ const TechXtremeApp = () => {
     </div>
   );
 };
-
 export default TechXtremeApp;

@@ -1,7 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+input:-webkit-autofill {
+  background-color: black !important; /* Keeps it transparent */
+  color: #00ffff !important; /* Ensures cyan text */
+  box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.5) inset !important; /* Prevents browser override */
+}
 body {
   font-family: Arial, Helvetica, sans-serif;
 }

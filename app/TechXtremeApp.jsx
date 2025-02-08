@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   Award,
-  Binary,
   BookOpen,
   Brain,
   Camera,
@@ -478,372 +477,319 @@ const formFields = [
   { id: "github", label: "GitHub Profile", type: "url" },
 ];
 
-import {
-  CircuitBoard,
-  Code2,
-  Cpu,
-  Hash,
-  Power,
-  Radio,
-  Shield,
-  Signal,
-  Terminal,
-  Webhook,
-} from "lucide-react";
-
 const IdeathonForm = ({ handleSubmit }) => {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    teamIdentifier: "",
-    accessCode: "",
+    name: "",
+    email: "",
+    batchId: "",
+    teamName: "",
     projectTitle: "",
-    implementation: "",
-    techStack: [],
+    description: "",
   });
 
-  const [currentStep, setCurrentStep] = useState(1);
-  const [scanline, setScanline] = useState(0);
-  const [powerLevel, setPowerLevel] = useState(0);
-
-  // Cyberpunk animation effects
-  useEffect(() => {
-    const scanInterval = setInterval(() => {
-      setScanline((prev) => (prev + 1) % 100);
-    }, 3000);
-
-    const powerInterval = setInterval(() => {
-      setPowerLevel((prev) => (prev + 1) % 100);
-    }, 50);
-
-    return () => {
-      clearInterval(scanInterval);
-      clearInterval(powerInterval);
-    };
-  }, []);
-
-  const HexagonDecoration = ({ position, delay = 0 }) => (
-    <motion.div
-      className={`absolute ${position} w-12 h-12`}
-      // initial={{ opacity: 0, scale: 0 }}
-      // animate={{ opacity: 0.15, scale: 1 }}
-      // transition={{ delay, duration: 1 }}
-    >
-      <div className="w-full h-full relative">
-        <div className="absolute inset-0 border-2 border-cyan-500/30 rotate-45 transform-gpu" />
-        <div className="absolute inset-0 border-2 border-cyan-500/30 -rotate-45 transform-gpu" />
-      </div>
-    </motion.div>
-  );
-
-  const CyberButton = ({ children, onClick, className = "" }) => {
-    return (
-      <motion.button
-        onClick={onClick}
-        className={`
-          relative group overflow-hidden
-          px-6 py-2 rounded-sm
-          bg-black border border-cyan-500/50
-          text-cyan-500 transition-colors duration-300
-          ${className}
-        `}
-        whileTap={{ scale: 0.98 }}
-      >
-        {/* Smooth Continuous Glow Effect */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"
-          initial={{ x: "-100%" }}
-          animate={{
-            x: ["-100%", "100%"],
-            transition: {
-              duration: 2,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "linear",
-            },
-          }}
-        />
-
-        {/* Thin Strip Moving Across */}
-        <motion.div
-          className="absolute top-0 left-0 w-2 h-full bg-cyan-500/50 skew-x-[45deg]"
-          initial={{ x: "-100%" }}
-          animate={{
-            x: ["-100%", "100%"],
-            transition: {
-              duration: 2,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "linear",
-            },
-          }}
-        />
-
-        <div className="relative flex items-center gap-2">{children}</div>
-      </motion.button>
-    );
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const InputField = ({ label, icon: Icon, ...props }) => (
-    <motion.div className="relative group">
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/50 to-cyan-500/0 opacity-0 group-hover:opacity-100 rounded-sm transition duration-500" />
-      <div className="relative bg-black/80 border border-cyan-500/30 rounded-sm">
-        <label className="flex items-center gap-2 text-cyan-500 text-sm px-4 py-2 border-b border-cyan-500/30">
-          <Icon className="w-4 h-4" />
-          {label}
-        </label>
-        <input
-          className="w-full px-4 py-3 bg-transparent text-cyan-400 placeholder-cyan-500/30 focus:outline-none"
-          {...props}
-        />
-        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-      </div>
-    </motion.div>
-  );
+  const handleNext = () => {
+    setStep(step + 1);
+  };
 
-  const TechStackGrid = () => (
-    <div className="grid grid-cols-3 gap-3">
-      {[
-        "Neural.AI",
-        "Quantum.DB",
-        "CyberNode",
-        "BioTech.js",
-        "NanoReact",
-        "CryptoCore",
-      ].map((tech, index) => (
-        <motion.div
-          key={tech}
-          // initial={{ opacity: 0, y: 20 }}
-          // animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-          onClick={() => {
-            const newStack = formData.techStack.includes(tech)
-              ? formData.techStack.filter((t) => t !== tech)
-              : [...formData.techStack, tech];
-            setFormData({ ...formData, techStack: newStack });
-          }}
-          className={`
-            relative cursor-pointer overflow-hidden
-            border ${
-              formData.techStack.includes(tech)
-                ? "border-cyan-500"
-                : "border-cyan-500/30"
-            }
-            bg-black/80 rounded-sm
-            group transition-all duration-300
-          `}
-        >
-          <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="px-4 py-3 flex items-center justify-between">
-            <span className="text-cyan-500 text-sm">{tech}</span>
-            <Binary className="w-4 h-4 text-cyan-500/50" />
-          </div>
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-        </motion.div>
-      ))}
-    </div>
-  );
+  const handleBack = () => {
+    setStep(step - 1);
+  };
 
-  const PowerIndicator = () => (
-    <div className="absolute top-4 right-4 flex items-center gap-2">
-      <div className="text-cyan-500 text-sm">PWR</div>
-      <div className="w-32 h-1 bg-black/50 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-cyan-500"
-          style={{ width: `${powerLevel}%` }}
-        />
-      </div>
-    </div>
-  );
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleSubmit(formData);
+  };
+
+  // Enhanced animations
+  const containerVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const formVariants = {
+    initial: {
+      x: 300,
+      opacity: 0,
+      rotate: 5,
+    },
+    animate: {
+      x: 0,
+      opacity: 1,
+      rotate: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+    exit: {
+      x: -300,
+      opacity: 0,
+      rotate: -5,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+  };
+
+  const inputVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  };
 
   return (
     <div className={audiowide.className}>
-      <div className="min-h-screen w-full flex items-center justify-center p-4">
-        <style>
-          {`
-          @keyframes moveGlow {
-            from { transform: translateX(-100%) skewX(45deg); }
-            to { transform: translateX(200%) skewX(45deg); }
-          }
-
-        `}
-        </style>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="w-full max-w-2xl relative"
+      <div className="min-h-screen flex items-center justify-center p-4 ">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="w-full max-w-2xl p-8 rounded-xl backdrop-blur-lg bg-grey/1 border border-cyan-900/70 shadow-xl border-glow "
+        >
+          <motion.h2
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100 }}
+            className="text-3xl mb-8 text-cyan-500 font-[Audiowide] text-center"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent opacity-50" />
-            <div
-              className={`relative backdrop-blur-sm bg-black/70 p-8 border border-cyan-500/30 rounded-sm
-            }`}
-            >
-              <PowerIndicator />
+            Ideathon Registration
+          </motion.h2>
 
-              {/* Decorative elements */}
-              <HexagonDecoration position="top-0 left-0 -translate-x-1/2 -translate-y-1/2" />
-              <HexagonDecoration
-                position="top-0 right-0 translate-x-1/2 -translate-y-1/2"
-                delay={0.2}
-              />
-              <HexagonDecoration
-                position="bottom-0 left-0 -translate-x-1/2 translate-y-1/2"
-                delay={0.4}
-              />
-              <HexagonDecoration
-                position="bottom-0 right-0 translate-x-1/2 translate-y-1/2"
-                delay={0.6}
-              />
-
-              {/* Header */}
-              <div className="relative mb-8">
+          <form
+            onSubmit={handleFormSubmit}
+            className="space-y-6"
+            autoComplete="off"
+          >
+            <AnimatePresence mode="wait">
+              {step === 1 && (
                 <motion.div
-                  className="flex items-center justify-center gap-4"
-                  initial={{ y: -20 }}
-                  animate={{ y: 0 }}
+                  key="step1"
+                  variants={formVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="space-y-6"
                 >
-                  <Terminal className="w-6 h-6 text-cyan-500" />
-                  <h1 className="text-3xl font-bold text-cyan-500">
-                    CYBER//FORM
-                  </h1>
-                  <Power className="w-6 h-6 text-cyan-500" />
-                </motion.div>
-              </div>
-
-              {/* Progress indicator */}
-              <div className="relative w-full h-1 bg-black mb-8 overflow-hidden">
-                <motion.div
-                  className="absolute top-0 left-0 h-full bg-cyan-500"
-                  style={{ width: `${(currentStep / 3) * 100}%` }}
-                />
-                <div
-                  className="absolute top-0 left-0 w-full h-full"
-                  style={{
-                    background: `linear-gradient(90deg,
-                    transparent ${scanline - 5}%,
-                    rgba(0, 255, 255, 0.5) ${scanline}%,
-                    transparent ${scanline + 5}%)`,
-                  }}
-                />
-              </div>
-
-              {/* Form steps */}
-              <div className="space-y-6">
-                {currentStep === 1 && (
+                  <div className="flex flex-col gap-6">
+                    <motion.div variants={inputVariants}>
+                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                        Name
+                      </label>
+                      <motion.input
+                        whileFocus={{ scale: 1.02 }}
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 placeholder-cyan-300 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 transition-all duration-300 autofill:bg-black/50 autofill:text-cyan-100"
+                        required
+                      />
+                    </motion.div>
+                    <motion.div variants={inputVariants}>
+                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                        Email
+                      </label>
+                      <motion.input
+                        whileFocus={{ scale: 1.02 }}
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                        required
+                      />
+                    </motion.div>
+                  </div>
                   <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    className="flex justify-end"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
                   >
-                    <InputField
-                      label="TEAM IDENTIFIER"
-                      icon={Hash}
-                      placeholder="Enter identifier"
-                      value={formData.teamIdentifier}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          teamIdentifier: e.target.value,
-                        })
-                      }
-                    />
-                    <InputField
-                      label="ACCESS CODE"
-                      icon={Shield}
-                      type="password"
-                      placeholder="Enter access code"
-                      value={formData.accessCode}
-                      onChange={(e) =>
-                        setFormData({ ...formData, accessCode: e.target.value })
-                      }
-                    />
-                  </motion.div>
-                )}
-
-                {currentStep === 2 && (
-                  <motion.div className="space-y-6">
-                    <InputField
-                      label="PROJECT DESIGNATION"
-                      icon={CircuitBoard}
-                      placeholder="Enter project title"
-                      value={formData.projectTitle}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          projectTitle: e.target.value,
-                        })
-                      }
-                    />
-                    <div className="relative group">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/50 to-cyan-500/0 opacity-0 group-hover:opacity-100 rounded-sm transition duration-500" />
-                      <div className="relative bg-black/80 border border-cyan-500/30 rounded-sm">
-                        <label className="flex items-center gap-2 text-cyan-500 text-sm px-4 py-2 border-b border-cyan-500/30">
-                          <Code2 className="w-4 h-4" />
-                          IMPLEMENTATION SPECS
-                        </label>
-                        <textarea
-                          className="w-full px-4 py-3 bg-transparent text-cyan-400 placeholder-cyan-500/30 focus:outline-none h-32 resize-none"
-                          placeholder="Detail your implementation..."
-                          value={formData.implementation}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              implementation: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {currentStep === 3 && (
-                  <motion.div className="space-y-6">
-                    <label className="flex items-center gap-2 text-cyan-500 text-sm">
-                      <Webhook className="w-4 h-4" />
-                      TECH STACK INTEGRATION
-                    </label>
-                    <TechStackGrid />
-                  </motion.div>
-                )}
-
-                <div className="flex justify-between mt-8">
-                  {currentStep > 1 && (
-                    <CyberButton
-                      onClick={() => setCurrentStep((prev) => prev - 1)}
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="button"
+                      onClick={handleNext}
+                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                    border border-cyan-500 rounded-lg backdrop-blur-lg
+                    bg-black/10 shadow-md shadow-cyan-500/20
+                    transition-transform duration-300 ease-in-out"
                     >
-                      <Signal className="w-4 h-4" />
-                      BACK
-                    </CyberButton>
-                  )}
-                  <CyberButton
-                    onClick={() =>
-                      currentStep < 3
-                        ? setCurrentStep((prev) => prev + 1)
-                        : null
-                    }
-                    className="ml-auto"
+                      Proceed
+                    </motion.button>
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  variants={formVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="space-y-6"
+                >
+                  <div className="flex flex-col gap-6">
+                    <motion.div variants={inputVariants}>
+                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                        Batch ID
+                      </label>
+                      <motion.input
+                        whileFocus={{ scale: 1.02 }}
+                        type="text"
+                        name="batchId"
+                        value={formData.batchId}
+                        onChange={handleChange}
+                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                        required
+                      />
+                    </motion.div>
+                    <motion.div variants={inputVariants}>
+                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                        Team Name
+                      </label>
+                      <motion.input
+                        whileFocus={{ scale: 1.02 }}
+                        type="text"
+                        name="teamName"
+                        value={formData.teamName}
+                        onChange={handleChange}
+                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                        required
+                      />
+                    </motion.div>
+                  </div>
+                  <motion.div
+                    className="flex justify-between"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
                   >
-                    {currentStep === 3 ? (
-                      <>
-                        <Cpu className="w-4 h-4" />
-                        INITIALIZE
-                      </>
-                    ) : (
-                      <>
-                        <Radio className="w-4 h-4" />
-                        PROCEED
-                      </>
-                    )}
-                  </CyberButton>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="button"
+                      onClick={handleBack}
+                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                    border border-cyan-500 rounded-lg backdrop-blur-lg
+                    bg-black/10 shadow-md shadow-cyan-500/20
+                    transition-transform duration-300 ease-in-out"
+                    >
+                      Back
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="button"
+                      onClick={handleNext}
+                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                    border border-cyan-500 rounded-lg backdrop-blur-lg
+                    bg-black/10 shadow-md shadow-cyan-500/20
+                    transition-transform duration-300 ease-in-out"
+                    >
+                      Proceed
+                    </motion.button>
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  variants={formVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="space-y-6"
+                >
+                  <div className="flex flex-col gap-6">
+                    <motion.div variants={inputVariants}>
+                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                        Project Title
+                      </label>
+                      <motion.input
+                        whileFocus={{ scale: 1.02 }}
+                        type="text"
+                        name="projectTitle"
+                        value={formData.projectTitle}
+                        onChange={handleChange}
+                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                        required
+                      />
+                    </motion.div>
+                    <motion.div variants={inputVariants}>
+                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                        Brief Description
+                      </label>
+                      <motion.textarea
+                        whileFocus={{ scale: 1.02 }}
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors h-24"
+                        required
+                      />
+                    </motion.div>
+                  </div>
+                  <motion.div
+                    className="flex justify-between"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="button"
+                      onClick={handleNext}
+                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                    border border-cyan-500 rounded-lg backdrop-blur-lg
+                    bg-black/10 shadow-md shadow-cyan-500/20
+                    transition-transform duration-300 ease-in-out"
+                    >
+                      Back
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="button"
+                      onClick={handleBack}
+                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                    border border-cyan-500 rounded-lg backdrop-blur-lg
+                    bg-black/10 shadow-md shadow-cyan-500/20
+                    transition-transform duration-300 ease-in-out"
+                    >
+                      Initialize
+                    </motion.button>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </form>
+        </motion.div>
       </div>
     </div>
   );

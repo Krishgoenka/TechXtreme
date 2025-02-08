@@ -1150,7 +1150,7 @@ const TechXtremeApp = () => {
                       features={[
                         { icon: Mic, text: "Live Performances" },
                         { icon: Laugh, text: "Standup Comedy" },
-                        { icon: Globe, text: "Cultural Diversity" },
+                        { icon: Globe, text: "Open to All" },
                         { icon: Plus, text: "Surprise Events" },
                       ]}
                       onClick={() => setActiveRegistration("cultural")}

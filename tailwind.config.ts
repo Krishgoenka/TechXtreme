@@ -9,7 +9,8 @@ module.exports = {
   theme: {
   	extend: {
   		animation: {
-  			pulse: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+				'pulse': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'spin-slow': 'spin 5s linear infinite',
   		},
   		backgroundImage: {
   			'grid-white': 'linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px)'

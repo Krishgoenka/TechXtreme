@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 input:-webkit-autofill {
   background-color: black !important; /* Keeps it transparent */
   color: #00ffff !important; /* Ensures cyan text */

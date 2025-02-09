@@ -1,6 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  ArrowLeft,
   ArrowRight,
   Award,
   Badge,
@@ -9,7 +10,6 @@ import {
   Camera,
   Code,
   Gift,
-  Github,
   Globe,
   Heart,
   Laugh,
@@ -803,162 +803,563 @@ const IdeathonForm = ({ handleSubmit }) => {
   );
 };
 
+import { Bot, ChevronLeft, ChevronRight, Cpu } from "lucide-react";
+
+import { Terminal } from "lucide-react";
+
 const GenAIForm = ({ onSubmit }) => {
+  const [page, setPage] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    github: "",
-    experience: "",
-    projectIdea: "",
+    batch: "",
+    id: "",
+    cloudUrl: "",
+    tshirtSize: "",
   });
 
+  const formFields = [
+    [
+      { name: "name", label: "Registered Name", type: "text" },
+      { name: "email", label: "Email", type: "email" },
+    ],
+    [
+      { name: "batch", label: "Batch", type: "text" },
+      { name: "id", label: "ID", type: "text" },
+    ],
+    [
+      { name: "cloudUrl", label: "Cloud Skill Boost URL", type: "url" },
+      {
+        name: "tshirtSize",
+        label: "T-shirt Size",
+        type: "select",
+        options: ["S", "M", "L", "XL", "XXL"],
+      },
+    ],
+  ];
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleNext = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setPage(page + 1);
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const handleBack = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setPage(page - 1);
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (page === formFields.length - 1) {
+      onSubmit(formData);
+    } else {
+      handleNext();
+    }
+  };
+
+  const getProgressText = (idx) => {
+    if (idx < page) return "■ COMPLETE ■";
+    if (idx === page) return "► ACTIVE ◄";
+    return "□ PENDING □";
+  };
+
   return (
-    <motion.form
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(formData);
-      }}
-    >
-      <FormInput
-        label="Full Name"
-        icon={User}
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        required
-      />
-      <FormInput
-        label="Email"
-        type="email"
-        icon={Mail}
-        value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-        required
-      />
-      <FormInput
-        label="GitHub Profile"
-        icon={Github}
-        value={formData.github}
-        onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-        required
-      />
-      <div className="relative">
-        <label className="text-cyan-300 text-sm mb-1 block">
-          Experience with AI
-        </label>
-        <textarea
-          className="w-full bg-gray-900/50 border border-cyan-800/30 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 h-32"
-          value={formData.experience}
-          onChange={(e) =>
-            setFormData({ ...formData, experience: e.target.value })
-          }
-          required
-          placeholder="Describe your experience with AI..."
-        />
+    <div className="min-h-screen flex items-center justify-center p-4 ">
+      <div className="w-full max-w-2xl backdrop-blur-lg bg-black/10 rounded-xl shadow-2xl overflow-hidden border border-cyan-500/20">
+        {/* Decorative header */}
+        <div className="relative h-16 bg-cyan-500/10 flex items-center justify-center overflow-hidden">
+          <button
+            onClick={() => setShowCulturalForm(false)}
+            className="absolute left-4 top-4 p-2 text-white transition-all duration-300 hover:scale-110"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+
+          <div className="absolute animate-spin-slow">
+            <Cpu className="w-32 h-32 text-cyan-500/20" />
+          </div>
+          <div className="relative z-10 animate-bounce">
+            <Bot className="w-8 h-8 text-cyan-400" />
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Terminal-style Progress Bar */}
+          <div className="bg-gray-900/60 rounded-lg p-4 font-mono text-sm">
+            <div className="flex items-center gap-2 mb-2 text-cyan-400">
+              <Terminal className="w-4 h-4" />
+              <span className="animate-pulse"> GENAI.FORM.progress_status</span>
+            </div>
+            {formFields.map((_, idx) => (
+              <div key={idx} className="relative">
+                <div
+                  className={`flex items-center gap-2 p-1 ${
+                    idx === page
+                      ? "text-cyan-300"
+                      : idx < page
+                      ? "text-green-400"
+                      : "text-gray-500"
+                  }`}
+                >
+                  <div className="w-24 text-right">{`SECTION_${idx + 1}`}</div>
+                  <div className="flex-1 flex items-center gap-2">
+                    <div
+                      className={`h-0.5 flex-1 ${
+                        idx <= page ? "bg-cyan-400" : "bg-gray-600"
+                      }`}
+                    >
+                      {idx <= page && (
+                        <div className="h-full w-full animate-loading-bar bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
+                      )}
+                    </div>
+                    <div
+                      className={`text-xs whitespace-nowrap ${
+                        idx === page ? "animate-pulse" : ""
+                      }`}
+                    >
+                      {getProgressText(idx)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="mt-2 text-xs text-cyan-400/60 border-t border-cyan-500/20 pt-2">
+              {`// Total Progress: ${Math.round(
+                (page / (formFields.length - 1)) * 100
+              )}%`}
+            </div>
+          </div>
+
+          {/* Form fields with transition */}
+          <div
+            className={`space-y-6 transition-all duration-300 transform
+            ${
+              isTransitioning
+                ? "opacity-0 translate-x-full"
+                : "opacity-100 translate-x-0"
+            }`}
+          >
+            {formFields[page].map((field) => (
+              <div key={field.name} className="space-y-2">
+                <label className="block text-cyan-300 text-sm font-medium">
+                  {field.label}
+                </label>
+                {field.type === "select" ? (
+                  <select
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleInputChange}
+                    className="w-full bg-black/5 backdrop-blur-sm border-2 border-cyan-500/30 rounded-lg
+                    px-4 py-2 text-white focus:border-cyan-400 focus:ring-cyan-400 transition-colors
+                    hover:border-cyan-400/50"
+                  >
+                    <option value="">Select size</option>
+                    {field.options.map((option) => (
+                      <option
+                        key={option}
+                        value={option}
+                        className="bg-black-800"
+                      >
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleInputChange}
+                    className="w-full bg-black/5 backdrop-blur-sm border-2 border-cyan-500/30 rounded-lg
+                    px-4 py-2 text-white focus:border-cyan-400 focus:ring-cyan-400 transition-colors
+                    hover:border-cyan-400/50"
+                    required
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation buttons */}
+          <div className="flex justify-between pt-4">
+            {page > 0 && (
+              <button
+                type="button"
+                onClick={handleBack}
+                className="flex items-center px-4 py-2 text-cyan-300 hover:text-cyan-100
+                transition-all hover:scale-105 active:scale-95 backdrop-blur-sm bg-white/5
+                rounded-lg border border-cyan-500/30"
+              >
+                <ChevronLeft className="w-5 h-5 mr-2" />
+                Back
+              </button>
+            )}
+            <button
+              type="submit"
+              className="flex items-center bg-cyan-500/20 backdrop-blur-sm border border-cyan-400/50
+              hover:bg-cyan-400/30 text-cyan-300 px-6 py-2 rounded-lg ml-auto transition-all
+              hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-cyan-400/20"
+            >
+              {page === formFields.length - 1 ? "Submit" : "Next"}
+              {page !== formFields.length - 1 && (
+                <ChevronRight className="w-5 h-5 ml-2" />
+              )}
+            </button>
+          </div>
+        </form>
       </div>
-      <div className="relative">
-        <label className="text-cyan-300 text-sm mb-1 block">Project Idea</label>
-        <textarea
-          className="w-full bg-gray-900/50 border border-cyan-800/30 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 h-32"
-          value={formData.projectIdea}
-          onChange={(e) =>
-            setFormData({ ...formData, projectIdea: e.target.value })
-          }
-          required
-          placeholder="Describe your project idea..."
-        />
-      </div>
-      <button
-        type="submit"
-        className="w-full bg-gradient-to-r from-cyan-700 to-cyan-600 text-white py-3 rounded-lg font-medium tracking-wider uppercase text-sm hover:from-cyan-600 hover:to-cyan-500 transition-all duration-500 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/30"
-      >
-        Submit
-      </button>
-    </motion.form>
+    </div>
   );
 };
 
+import { PartyPopper, Sparkles } from "lucide-react";
+
+import { BookText, Palette, Theater } from "lucide-react";
+
 const CulturalForm = ({ onSubmit }) => {
+  const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     event: "",
-    performanceDetails: "",
+    participants: "",
+    duration: "",
+    date: "",
+    requirements: "",
   });
 
+  // Progress icons based on cultural events
+  const progressIcons = [
+    { icon: Palette, label: "Registration" },
+    { icon: Mic, label: "Event Selection" },
+    { icon: Theater, label: "Performance Details" },
+    { icon: BookText, label: "Final Details" },
+  ];
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  const nextStep = () => setStep(step + 1);
+  const prevStep = () => setStep(step - 1);
+
   return (
-    <motion.form
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(formData);
-      }}
-    >
-      <FormInput
-        label="Full Name"
-        icon={User}
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        required
-      />
-      <FormInput
-        label="Email"
-        type="email"
-        icon={Mail}
-        value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-        required
-      />
-      <FormInput
-        label="Phone Number"
-        type="tel"
-        icon={Phone}
-        value={formData.phone}
-        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-        required
-      />
-      <div className="relative">
-        <label className="text-cyan-300 text-sm mb-1 block">Event</label>
-        <select
-          className="w-full bg-gray-900/50 border border-cyan-800/30 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300"
-          value={formData.event}
-          onChange={(e) => setFormData({ ...formData, event: e.target.value })}
-          required
-        >
-          <option value="">Select an event</option>
-          <option value="dance">Dance</option>
-          <option value="music">Music</option>
-          <option value="drama">Drama</option>
-        </select>
+    <div className="min-h-screen p-6 flex items-center justify-center bg-black relative overflow-hidden">
+      {/* Cyberpunk Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,0,199,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,0,199,0.15)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,rgba(99,0,199,0.15),transparent)]" />
       </div>
-      <div className="relative">
-        <label className="text-cyan-300 text-sm mb-1 block">
-          Performance Details
-        </label>
-        <textarea
-          className="w-full bg-gray-900/50 border border-cyan-800/30 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-300 h-32"
-          value={formData.performanceDetails}
-          onChange={(e) =>
-            setFormData({ ...formData, performanceDetails: e.target.value })
+
+      {/* Enhanced Floating Elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {[...Array(18)].map((_, i) => (
+          <div
+            key={`music-${i}`}
+            className="absolute animate-floating"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animation: `float ${10 + Math.random() * 5}s infinite`,
+              animationDelay: `${i * 0.5}s`,
+            }}
+          >
+            <Music
+              className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+              size={40 + Math.random() * 40}
+              style={{ transform: `rotate(${Math.random() * 360}deg)` }}
+            />
+          </div>
+        ))}
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={`party-${i}`}
+            className="absolute animate-floating"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animation: `float ${8 + Math.random() * 5}s infinite`,
+              animationDelay: `${i * 0.7}s`,
+            }}
+          >
+            <PartyPopper
+              className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+              size={30 + Math.random() * 30}
+              style={{ transform: `rotate(${Math.random() * 360}deg)` }}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="w-full max-w-md relative">
+        {/* Enhanced Form Container */}
+        <div className="backdrop-blur-xl bg-black/10 rounded-2xl p-8 shadow-[0_0_20px_rgba(99,0,199,0.3)] border border-purple-500/30">
+          {/* Enhanced Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
+              <Sparkles className="w-8 h-8 text-purple-500" />
+              Cultural Fest
+              <Star className="w-8 h-8 text-purple-500" />
+            </h2>
+            <div className="mt-2 text-purple-400/80">Registration Form</div>
+          </div>
+
+          {/* Enhanced Cultural Progress Bar */}
+          <div className="mb-12 relative">
+            {/* Progress Line */}
+            <div className="h-1 bg-purple-900/30 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-600 rounded-full transition-all duration-500"
+                style={{
+                  width: `${(step + 1) * 25}%`,
+                  backgroundSize: "200% 100%",
+                  animation: "shimmer 2s linear infinite",
+                }}
+              />
+            </div>
+
+            {/* Cultural Icons Progress */}
+            <div className="absolute -bottom-8 left-0 w-full flex justify-between mt-4">
+              {progressIcons.map((icon, i) => {
+                const Icon = icon.icon;
+                return (
+                  <div
+                    key={i}
+                    className={`flex flex-col items-center transition-all duration-500 ${
+                      i <= step ? "text-purple-400" : "text-purple-900"
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-500 ${
+                        i <= step
+                          ? "bg-purple-500 shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+                          : "bg-purple-900/30"
+                      }`}
+                    >
+                      <Icon
+                        size={20}
+                        className={i <= step ? "text-black" : "text-purple-700"}
+                      />
+                    </div>
+                    <span className="text-xs mt-1">{icon.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Form Steps with Enhanced Styling */}
+            <div className="relative min-h-[200px]">
+              {/* Step 1 */}
+              <div
+                className={`absolute w-full transition-all duration-500 ${
+                  step === 0
+                    ? "opacity-100 translate-x-0"
+                    : "opacity-0 translate-x-full pointer-events-none"
+                }`}
+              >
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div
+                className={`absolute w-full transition-all duration-500 ${
+                  step === 1
+                    ? "opacity-100 translate-x-0"
+                    : step < 1
+                    ? "opacity-0 -translate-x-full pointer-events-none"
+                    : "opacity-0 translate-x-full pointer-events-none"
+                }`}
+              >
+                <div className="space-y-4">
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                  <select
+                    name="event"
+                    value={formData.event}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all appearance-none"
+                  >
+                    <option value="" className="bg-black">
+                      Select Event
+                    </option>
+                    <option value="dance" className="bg-black">
+                      Classical Dance
+                    </option>
+                    <option value="music" className="bg-black">
+                      Musical Performance
+                    </option>
+                    <option value="drama" className="bg-black">
+                      Drama
+                    </option>
+                    <option value="poetry" className="bg-black">
+                      Poetry
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div
+                className={`absolute w-full transition-all duration-500 ${
+                  step === 2
+                    ? "opacity-100 translate-x-0"
+                    : step < 2
+                    ? "opacity-0 -translate-x-full pointer-events-none"
+                    : "opacity-0 translate-x-full pointer-events-none"
+                }`}
+              >
+                <div className="space-y-4">
+                  <input
+                    type="number"
+                    name="participants"
+                    placeholder="Number of Participants"
+                    value={formData.participants}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                  <input
+                    type="text"
+                    name="duration"
+                    placeholder="Performance Duration (minutes)"
+                    value={formData.duration}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div
+                className={`absolute w-full transition-all duration-500 ${
+                  step === 3
+                    ? "opacity-100 translate-x-0"
+                    : "opacity-0 translate-x-full pointer-events-none"
+                }`}
+              >
+                <div className="space-y-4">
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                  <textarea
+                    name="requirements"
+                    placeholder="Special Requirements"
+                    value={formData.requirements}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none h-24"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Navigation Buttons */}
+            <div className="flex justify-between gap-4 pt-4">
+              <button
+                type="button"
+                onClick={prevStep}
+                disabled={step === 0}
+                className={`px-6 py-2 rounded-lg transition-all ${
+                  step === 0
+                    ? "opacity-50 cursor-not-allowed bg-purple-900/20 text-purple-400/50"
+                    : "bg-black border border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:shadow-[0_0_10px_rgba(99,0,199,0.3)]"
+                }`}
+              >
+                Back
+              </button>
+
+              {step === 3 ? (
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                >
+                  Submit
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                >
+                  Next
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <style jsx global>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0) rotate(0deg);
           }
-          required
-          placeholder="Describe your performance..."
-        />
-      </div>
-      <button
-        type="submit"
-        className="w-full bg-gradient-to-r from-cyan-700 to-cyan-600 text-white py-3 rounded-lg font-medium tracking-wider uppercase text-sm hover:from-cyan-600 hover:to-cyan-500 transition-all duration-500 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/30"
-      >
-        Submit
-      </button>
-    </motion.form>
+          50% {
+            transform: translateY(-20px) rotate(10deg);
+          }
+        }
+
+        @keyframes shimmer {
+          0% {
+            background-position: 200% 0;
+          }
+          100% {
+            background-position: -200% 0;
+          }
+        }
+
+        .animate-floating {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
   );
 };
 
@@ -980,14 +1381,14 @@ const AudienceForm = ({ onSubmit }) => {
         onSubmit(formData);
       }}
     >
-      <FormInput
+      <CFormInput
         label="Full Name"
         icon={User}
         value={formData.name}
         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         required
       />
-      <FormInput
+      <CFormInput
         label="Email"
         type="email"
         icon={Mail}
@@ -995,7 +1396,7 @@ const AudienceForm = ({ onSubmit }) => {
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         required
       />
-      <FormInput
+      <CFormInput
         label="Phone Number"
         type="tel"
         icon={Phone}
@@ -1129,45 +1530,59 @@ const TechXtremeApp = () => {
                     </div>
                   </>
                 ) : (
-                  <div className="grid grid-cols-2 gap-10">
-                    <EventCard
-                      title="GenAI Study Jams Swags"
-                      description="Distribution of official merchandise from Google for securing Top 80 spot in GenAI Study Jams"
-                      icon={Gift}
-                      features={[
-                        { icon: Trophy, text: "Top 80 Achievers" },
-                        { icon: Gift, text: "Exclusive Google Merch" },
-                        { icon: Badge, text: "Official Recognition" },
-                        { icon: Star, text: "Elite Performer Status" },
-                      ]}
-                      onClick={() => setActiveRegistration("genai")}
-                      variant="primary"
-                    />
-                    <EventCard
-                      title="Cultural Programs"
-                      description="Join our vibrant cultural showcases, featuring music, dance, standup, and much more!"
-                      icon={Music}
-                      features={[
-                        { icon: Mic, text: "Live Performances" },
-                        { icon: Laugh, text: "Standup Comedy" },
-                        { icon: Globe, text: "Open to All" },
-                        { icon: Plus, text: "Surprise Events" },
-                      ]}
-                      onClick={() => setActiveRegistration("cultural")}
-                      variant="secondary"
-                    />
-                    <EventCard
-                      title="Attendee Registration"
-                      description="Register to be part of the TechXtreme experience as an audience member."
-                      icon={Users}
-                      features={[
-                        { icon: Ticket, text: "Free Entry" },
-                        { icon: MessageCircle, text: "Networking" },
-                      ]}
-                      onClick={() => setActiveRegistration("audience")}
-                      variant="primary"
-                    />
-                  </div>
+                  <>
+                    <div className="grid grid-cols-2 gap-10">
+                      <EventCard
+                        title="GenAI Study Jams Swags"
+                        description="Distribution of official merchandise from Google for securing Top 80 spot in GenAI Study Jams"
+                        icon={Gift}
+                        features={[
+                          { icon: Trophy, text: "Top 80 Achievers" },
+                          { icon: Gift, text: "Exclusive Google Merch" },
+                          { icon: Badge, text: "Official Recognition" },
+                          { icon: Star, text: "Elite Performer Status" },
+                        ]}
+                        onClick={() => setActiveRegistration("genai")}
+                        variant="primary"
+                      />
+                      <EventCard
+                        title="Cultural Programs"
+                        description="Join our vibrant cultural showcases, featuring music, dance, standup, and much more!"
+                        icon={Music}
+                        features={[
+                          { icon: Mic, text: "Live Performances" },
+                          { icon: Laugh, text: "Standup Comedy" },
+                          { icon: Globe, text: "Open to All" },
+                          { icon: Plus, text: "Surprise Events" },
+                        ]}
+                        onClick={() => setActiveRegistration("cultural")}
+                        variant="secondary"
+                      />
+                      <EventCard
+                        title="Attendee Registration"
+                        description="Register to be part of the TechXtreme experience as an audience member."
+                        icon={Users}
+                        features={[
+                          { icon: Ticket, text: "Free Entry" },
+                          { icon: MessageCircle, text: "Networking" },
+                        ]}
+                        onClick={() => setActiveRegistration("audience")}
+                        variant="primary"
+                      />
+                    </div>
+                    <div className="flex justify-center mt-8">
+                      <button
+                        onClick={() => setShowCulturalEvents(false)}
+                        className="relative px-12 py-6 rounded-lg font-medium tracking-wider uppercase text-sm text-white shadow-[0_4px_10px_rgba(128,0,128,0.5)] transition-all duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30
+        before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-700 before:to-purple-600 before:opacity-0 before:transition-opacity before:duration-500 before:hover:opacity-100 overflow-hidden"
+                      >
+                        <span className="relative z-10 flex items-center">
+                          <Users className="mr-3 inline" strokeWidth={1.5} />
+                          Back to Main Page
+                        </span>
+                      </button>
+                    </div>
+                  </>
                 )}
               </motion.div>
             )}

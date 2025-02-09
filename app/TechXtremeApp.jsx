@@ -11,25 +11,24 @@ import {
   Code,
   Gift,
   Globe,
+  Headphones,
   Heart,
   Laugh,
   Lightbulb,
-  Mail,
   MessageCircle,
   Mic,
   Music,
-  Phone,
   Plus,
   Rocket,
   Star,
   Ticket,
   Trophy,
-  User,
   Users,
-  Zap,
 } from "lucide-react";
-import { Audiowide } from "next/font/google";
+import { Audiowide, Play } from "next/font/google";
 import { useState } from "react";
+
+const playFont = Play({ subsets: ["latin"], weight: ["400", "700"] });
 
 const audiowide = Audiowide({
   subsets: ["latin"],
@@ -73,6 +72,196 @@ const utils = {
       ${index % 2 ? "rgba(34, 211, 238, 0.2)" : "rgba(129, 140, 248, 0.2)"} 0%,
       ${index % 2 ? "rgba(6, 182, 212, 0.1)" : "rgba(67, 56, 202, 0.1)"} 100%)`,
   }),
+};
+
+import { Check, Terminal } from "lucide-react";
+
+const CyberpunkSuccess = ({ setSubmitted, setActiveRegistration }) => {
+  const [showTerminal, setShowTerminal] = useState(true);
+  const [terminalLines, setTerminalLines] = useState([]);
+  const [showProgress, setShowProgress] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const terminalText = [
+    "Initializing quantum protocols...",
+    "Synchronizing neural networks...",
+    "Encrypting biometric data...",
+    "Establishing secure connection...",
+    "Validating digital signature...",
+    "Registration matrix confirmed.",
+    "Access granted. Initializing final sequence...",
+  ];
+
+  useEffect(() => {
+    let lineIndex = 0;
+    const terminalInterval = setInterval(() => {
+      if (lineIndex < terminalText.length) {
+        setTerminalLines((prev) => [...prev, terminalText[lineIndex]]);
+        lineIndex++;
+
+        // Show progress bar after last message
+        if (lineIndex === terminalText.length) {
+          setShowProgress(true);
+          clearInterval(terminalInterval);
+
+          // Start progress bar animation
+          let progressValue = 0;
+          const progressInterval = setInterval(() => {
+            progressValue += 2;
+            setProgress(progressValue);
+
+            if (progressValue >= 100) {
+              clearInterval(progressInterval);
+              setTimeout(() => {
+                setShowTerminal(false);
+                setShowSuccess(true);
+              }, 500);
+            }
+          }, 30);
+        }
+      }
+    }, 400);
+
+    return () => clearInterval(terminalInterval);
+  }, []);
+
+  const ProgressBar = () => (
+    <motion.div
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      className="mt-4 font-mono text-sm"
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-cyan-500"></span>
+        <span className="text-cyan-300">System synchronization:</span>
+        <span className="text-cyan-400">{progress}%</span>
+      </div>
+      <div className="h-5 bg-gray-800/50 border border-cyan-500/20 rounded overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.1 }}
+          className="h-full bg-gradient-to-r from-cyan-600/40 to-cyan-400/40 relative"
+        >
+          {/* Animated scanline effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent w-1/2 animate-[scan_1s_linear_infinite]" />
+
+          {/* Progress segments */}
+          {Array.from({ length: 50 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute h-full w-1 bg-gray-800/20"
+              style={{ left: `${i * 2}%` }}
+            />
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+
+  return (
+    <AnimatePresence mode="wait">
+      {showTerminal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="relative max-w-2xl w-full"
+        >
+          <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg border border-cyan-500/20 overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-2 border-b border-cyan-800/30 bg-cyan-900/20">
+              <Terminal size={14} className="text-cyan-500" />
+              <span className="text-xs text-cyan-400 font-mono">
+                System.Terminal
+              </span>
+            </div>
+            <div className="p-6 font-mono">
+              {terminalLines.map((line, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="flex items-center gap-2 text-sm mb-2"
+                >
+                  <span className="text-cyan-500"></span>
+                  <span className="text-cyan-300">{line}</span>
+                </motion.div>
+              ))}
+              {!showProgress && terminalLines.length < terminalText.length && (
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ repeat: Infinity, duration: 0.8 }}
+                  className="inline-block w-3 h-5 bg-cyan-400"
+                />
+              )}
+              {showProgress && <ProgressBar />}
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {showSuccess && (
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="relative max-w-2xl w-full"
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/20 to-transparent blur-2xl" />
+          <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-cyan-500/30 p-12 overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent opacity-50" />
+
+            {/* Content */}
+            <div className="relative">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", delay: 0.2 }}
+                className="mx-auto mb-8 w-20 h-20 rounded-full bg-cyan-500/20 flex items-center justify-center border border-cyan-400/30"
+              >
+                <Check className="text-cyan-400" size={40} strokeWidth={1.5} />
+              </motion.div>
+
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <h2 className="text-3xl text-center font-light text-cyan-300 mb-6 tracking-wider uppercase">
+                  Neural Link Established
+                </h2>
+                <p className="text-center text-cyan-100/70 mb-8 leading-relaxed">
+                  Your digital identity has been synchronized with the
+                  mainframe. Welcome to the network, operative.
+                </p>
+
+                <div className="flex justify-center">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setSubmitted(false);
+                      setActiveRegistration(null);
+                    }}
+                    className="group relative px-8 py-3 bg-cyan-500/10 rounded-lg overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/40 to-cyan-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative flex items-center gap-2 text-cyan-300 font-medium tracking-wider text-sm">
+                      <span>RETURN TO MAINFRAME</span>
+                      <ArrowRight size={16} />
+                    </div>
+                  </motion.button>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 };
 
 const Orb = ({ index }) => (
@@ -477,15 +666,242 @@ const EventCard = ({
   </motion.div>
 );
 
-// Registration Forms for Different Types
+const BackButton = ({ onClick }) => {
+  return (
+    <div className="flex justify-center mt-8">
+      <button
+        onClick={onClick}
+        className="relative px-12 py-6 rounded-lg font-medium tracking-wider uppercase text-sm text-white shadow-[0_4px_10px_rgba(128,0,128,0.5)] transition-all duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30
+        before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-700 before:to-purple-600 before:opacity-0 before:transition-opacity before:duration-500 before:hover:opacity-100 overflow-hidden"
+      >
+        <span className="relative z-10 flex items-center">
+          <Users className="mr-3 inline" strokeWidth={1.5} />
+          Back to Main Page
+        </span>
+      </button>
+    </div>
+  );
+};
+const CyberpunkTitle = () => {
+  return (
+    <div className={audiowide.className}>
+      <motion.div className="relative py-8">
+        <h1 className="relative text-7xl audiowide">
+          {/* Glitch container */}
+          <motion.div
+            className="relative flex justify-center items-center"
+            animate={{
+              x: [-1, 1, -1],
+            }}
+            transition={{
+              duration: 0.05,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            {/* Base text */}
+            <motion.div
+              className="absolute text-cyan-400"
+              animate={{
+                opacity: [1, 0.9, 1],
+              }}
+              transition={{
+                duration: 0.2,
+                repeat: Infinity,
+              }}
+            >
+              <motion.span
+                animate={{
+                  x: [-2, 2, -2],
+                  skewX: [-5, 5, -5],
+                }}
+                transition={{
+                  duration: 0.1,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                }}
+              >
+                TECH
+              </motion.span>
+              <motion.span
+                animate={{
+                  x: [2, -2, 2],
+                  skewX: [5, -5, 5],
+                }}
+                transition={{
+                  duration: 0.1,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                }}
+              >
+                XTREME
+              </motion.span>
+            </motion.div>
 
-const formFields = [
-  { id: "name", label: "Full Name", type: "text" },
-  { id: "email", label: "Email", type: "email" },
-  { id: "github", label: "GitHub Profile", type: "url" },
-];
+            {/* Glitch layers */}
+            <div className="relative">
+              <motion.div
+                className="absolute inset-0 text-cyan-400/50 clip-glitch"
+                animate={{
+                  x: [-3, 3, -3],
+                  y: [1, -1, 1],
+                }}
+                transition={{
+                  duration: 0.1,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                }}
+                style={{
+                  clipPath: "polygon(0 15%, 100% 15%, 100% 30%, 0 30%)",
+                }}
+              >
+                TECHXTREME
+              </motion.div>
 
-const IdeathonForm = ({ handleSubmit }) => {
+              <motion.div
+                className="absolute inset-0 text-cyan-400/50 clip-glitch"
+                animate={{
+                  x: [3, -3, 3],
+                  y: [-1, 1, -1],
+                }}
+                transition={{
+                  duration: 0.1,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                }}
+                style={{
+                  clipPath: "polygon(0 45%, 100% 45%, 100% 65%, 0 65%)",
+                }}
+              >
+                TECHXTREME
+              </motion.div>
+
+              <motion.div
+                className="absolute inset-0 text-cyan-400/50 clip-glitch"
+                animate={{
+                  x: [-2, 2, -2],
+                  y: [1, -1, 1],
+                }}
+                transition={{
+                  duration: 0.1,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                }}
+                style={{
+                  clipPath: "polygon(0 75%, 100% 75%, 100% 90%, 0 90%)",
+                }}
+              >
+                TECHXTREME
+              </motion.div>
+
+              {/* Main text with shadow effect */}
+              <motion.div
+                className="relative text-cyan-400"
+                animate={{
+                  textShadow: [
+                    "0 0 5px #0ff, 0 0 10px #0ff", // Reduced glow layers
+                    "0 0 3px #0ff, 0 0 8px #0ff",
+                    "0 0 5px #0ff, 0 0 10px #0ff",
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <motion.span
+                  animate={{
+                    skewX: [-2, 2, -2],
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                  }}
+                >
+                  TECH
+                </motion.span>
+                <motion.span
+                  animate={{
+                    skewX: [2, -2, 2],
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                  }}
+                >
+                  XTREME
+                </motion.span>
+              </motion.div>
+
+              {/* Flicker effect */}
+              <motion.div
+                className="absolute inset-0 text-cyan-400 mix-blend-screen"
+                animate={{
+                  opacity: [0, 0.5, 0],
+                }}
+                transition={{
+                  duration: 0.1,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  times: [0, 0.5, 1],
+                }}
+              >
+                TECHXTREME
+              </motion.div>
+            </div>
+
+            {/* Slice effect */}
+            {Array.from({ length: 5 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute inset-0 text-cyan-400/30 overflow-hidden"
+                animate={{
+                  y: [-2, 2, -2],
+                  x: [1, -1, 1],
+                }}
+                transition={{
+                  duration: 0.2,
+                  repeat: Infinity,
+                  delay: i * 0.1,
+                }}
+                style={{
+                  clipPath: `polygon(0 ${i * 20}%, 100% ${i * 20}%, 100% ${
+                    (i + 1) * 20
+                  }%, 0 ${(i + 1) * 20}%)`,
+                }}
+              >
+                TECHXTREME
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Slice lines */}
+          {Array.from({ length: 10 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-full h-px bg-cyan-400/20"
+              style={{ top: `${i * 10}%` }}
+              animate={{
+                scaleX: [1, 1.1, 1],
+                opacity: [0.2, 0.3, 0.2],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                delay: i * 0.1,
+              }}
+            />
+          ))}
+        </h1>
+      </motion.div>
+    </div>
+  );
+};
+
+const IdeathonForm = ({ onSubmit }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -510,7 +926,7 @@ const IdeathonForm = ({ handleSubmit }) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    handleSubmit(formData);
+    onSubmit(formData);
   };
 
   // Enhanced animations
@@ -783,8 +1199,8 @@ const IdeathonForm = ({ handleSubmit }) => {
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleBack}
+                      type="submit"
+                      // onClick={handle}
                       className="relative px-8 py-3 font-[Audiowide] text-cyan-300
                     border border-cyan-500 rounded-lg backdrop-blur-lg
                     bg-black/10 shadow-md shadow-cyan-500/20
@@ -804,8 +1220,6 @@ const IdeathonForm = ({ handleSubmit }) => {
 };
 
 import { Bot, ChevronLeft, ChevronRight, Cpu } from "lucide-react";
-
-import { Terminal } from "lucide-react";
 
 const GenAIForm = ({ onSubmit }) => {
   const [page, setPage] = useState(0);
@@ -1037,10 +1451,9 @@ const CulturalForm = ({ onSubmit }) => {
     email: "",
     phone: "",
     event: "",
+    customEvent: "",
     participants: "",
     duration: "",
-    date: "",
-    requirements: "",
   });
 
   // Progress icons based on cultural events
@@ -1052,7 +1465,13 @@ const CulturalForm = ({ onSubmit }) => {
   ];
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "event" && value !== "other" ? { customEvent: "" } : {}),
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -1064,353 +1483,774 @@ const CulturalForm = ({ onSubmit }) => {
   const prevStep = () => setStep(step - 1);
 
   return (
-    <div className="min-h-screen p-6 flex items-center justify-center bg-black relative overflow-hidden">
-      {/* Cyberpunk Grid Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,0,199,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,0,199,0.15)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,rgba(99,0,199,0.15),transparent)]" />
-      </div>
+    <div className={`${playFont.className} text-xl`}>
+      <div className="min-h-screen p-6 flex items-center justify-center bg-black relative overflow-hidden">
+        {/* Cyberpunk Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,0,199,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,0,199,0.15)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,rgba(99,0,199,0.15),transparent)]" />
+        </div>
 
-      {/* Enhanced Floating Elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {[...Array(18)].map((_, i) => (
-          <div
-            key={`music-${i}`}
-            className="absolute animate-floating"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animation: `float ${10 + Math.random() * 5}s infinite`,
-              animationDelay: `${i * 0.5}s`,
-            }}
-          >
-            <Music
-              className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
-              size={40 + Math.random() * 40}
-              style={{ transform: `rotate(${Math.random() * 360}deg)` }}
-            />
-          </div>
-        ))}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={`party-${i}`}
-            className="absolute animate-floating"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animation: `float ${8 + Math.random() * 5}s infinite`,
-              animationDelay: `${i * 0.7}s`,
-            }}
-          >
-            <PartyPopper
-              className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
-              size={30 + Math.random() * 30}
-              style={{ transform: `rotate(${Math.random() * 360}deg)` }}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div className="w-full max-w-md relative">
-        {/* Enhanced Form Container */}
-        <div className="backdrop-blur-xl bg-black/10 rounded-2xl p-8 shadow-[0_0_20px_rgba(99,0,199,0.3)] border border-purple-500/30">
-          {/* Enhanced Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
-              <Sparkles className="w-8 h-8 text-purple-500" />
-              Cultural Fest
-              <Star className="w-8 h-8 text-purple-500" />
-            </h2>
-            <div className="mt-2 text-purple-400/80">Registration Form</div>
-          </div>
-
-          {/* Enhanced Cultural Progress Bar */}
-          <div className="mb-12 relative">
-            {/* Progress Line */}
-            <div className="h-1 bg-purple-900/30 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-600 rounded-full transition-all duration-500"
-                style={{
-                  width: `${(step + 1) * 25}%`,
-                  backgroundSize: "200% 100%",
-                  animation: "shimmer 2s linear infinite",
-                }}
+        {/* Enhanced Floating Elements */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          {[...Array(18)].map((_, i) => (
+            <div
+              key={`music-${i}`}
+              className="absolute animate-floating"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animation: `float ${10 + Math.random() * 5}s infinite`,
+                animationDelay: `${i * 0.5}s`,
+              }}
+            >
+              <Music
+                className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+                size={40 + Math.random() * 40}
+                style={{ transform: `rotate(${Math.random() * 360}deg)` }}
               />
             </div>
+          ))}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={`party-${i}`}
+              className="absolute animate-floating"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animation: `float ${8 + Math.random() * 5}s infinite`,
+                animationDelay: `${i * 0.7}s`,
+              }}
+            >
+              <PartyPopper
+                className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+                size={30 + Math.random() * 30}
+                style={{ transform: `rotate(${Math.random() * 360}deg)` }}
+              />
+            </div>
+          ))}
+        </div>
 
-            {/* Cultural Icons Progress */}
-            <div className="absolute -bottom-8 left-0 w-full flex justify-between mt-4">
-              {progressIcons.map((icon, i) => {
-                const Icon = icon.icon;
-                return (
-                  <div
-                    key={i}
-                    className={`flex flex-col items-center transition-all duration-500 ${
-                      i <= step ? "text-purple-400" : "text-purple-900"
-                    }`}
-                  >
+        <div className="w-full max-w-md relative">
+          {/* Enhanced Form Container */}
+          <div className="backdrop-blur-xl bg-black/10 rounded-2xl p-8 shadow-[0_0_20px_rgba(99,0,199,0.3)] border border-purple-500/30">
+            {/* Enhanced Header */}
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
+                <Sparkles className="w-8 h-8 text-purple-500" />
+                Cultural Fest
+                <Star className="w-8 h-8 text-purple-500" />
+              </h2>
+              <div className="mt-2 text-purple-400/80">Registration Form</div>
+            </div>
+
+            {/* Enhanced Cultural Progress Bar */}
+            <div className="mb-12 relative">
+              {/* Progress Line */}
+              <div className="h-1 bg-purple-900/30 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-600 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${(step + 1) * 25}%`,
+                    backgroundSize: "200% 100%",
+                    animation: "shimmer 2s linear infinite",
+                  }}
+                />
+              </div>
+
+              {/* Cultural Icons Progress */}
+              <div className="absolute -bottom-8 left-0 w-full flex justify-between mt-4">
+                {progressIcons.map((icon, i) => {
+                  const Icon = icon.icon;
+                  return (
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-500 ${
-                        i <= step
-                          ? "bg-purple-500 shadow-[0_0_10px_rgba(99,0,199,0.5)]"
-                          : "bg-purple-900/30"
+                      key={i}
+                      className={`flex flex-col items-center transition-all duration-500 ${
+                        i <= step ? "text-purple-400" : "text-purple-900"
                       }`}
                     >
-                      <Icon
-                        size={20}
-                        className={i <= step ? "text-black" : "text-purple-700"}
-                      />
+                      <div
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-500 ${
+                          i <= step
+                            ? "bg-purple-500 shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+                            : "bg-purple-900/30"
+                        }`}
+                      >
+                        <Icon
+                          size={20}
+                          className={
+                            i <= step ? "text-black" : "text-purple-700"
+                          }
+                        />
+                      </div>
+                      <span className="text-xs mt-1">{icon.label}</span>
                     </div>
-                    <span className="text-xs mt-1">{icon.label}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Form Steps with Enhanced Styling */}
-            <div className="relative min-h-[200px]">
-              {/* Step 1 */}
-              <div
-                className={`absolute w-full transition-all duration-500 ${
-                  step === 0
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 translate-x-full pointer-events-none"
-                }`}
-              >
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Step 2 */}
-              <div
-                className={`absolute w-full transition-all duration-500 ${
-                  step === 1
-                    ? "opacity-100 translate-x-0"
-                    : step < 1
-                    ? "opacity-0 -translate-x-full pointer-events-none"
-                    : "opacity-0 translate-x-full pointer-events-none"
-                }`}
-              >
-                <div className="space-y-4">
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Phone Number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  />
-                  <select
-                    name="event"
-                    value={formData.event}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all appearance-none"
-                  >
-                    <option value="" className="bg-black">
-                      Select Event
-                    </option>
-                    <option value="dance" className="bg-black">
-                      Classical Dance
-                    </option>
-                    <option value="music" className="bg-black">
-                      Musical Performance
-                    </option>
-                    <option value="drama" className="bg-black">
-                      Drama
-                    </option>
-                    <option value="poetry" className="bg-black">
-                      Poetry
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div
-                className={`absolute w-full transition-all duration-500 ${
-                  step === 2
-                    ? "opacity-100 translate-x-0"
-                    : step < 2
-                    ? "opacity-0 -translate-x-full pointer-events-none"
-                    : "opacity-0 translate-x-full pointer-events-none"
-                }`}
-              >
-                <div className="space-y-4">
-                  <input
-                    type="number"
-                    name="participants"
-                    placeholder="Number of Participants"
-                    value={formData.participants}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  />
-                  <input
-                    type="text"
-                    name="duration"
-                    placeholder="Performance Duration (minutes)"
-                    value={formData.duration}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Step 4 */}
-              <div
-                className={`absolute w-full transition-all duration-500 ${
-                  step === 3
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 translate-x-full pointer-events-none"
-                }`}
-              >
-                <div className="space-y-4">
-                  <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  />
-                  <textarea
-                    name="requirements"
-                    placeholder="Special Requirements"
-                    value={formData.requirements}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none h-24"
-                  />
-                </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Enhanced Navigation Buttons */}
-            <div className="flex justify-between gap-4 pt-4">
-              <button
-                type="button"
-                onClick={prevStep}
-                disabled={step === 0}
-                className={`px-6 py-2 rounded-lg transition-all ${
-                  step === 0
-                    ? "opacity-50 cursor-not-allowed bg-purple-900/20 text-purple-400/50"
-                    : "bg-black border border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:shadow-[0_0_10px_rgba(99,0,199,0.3)]"
-                }`}
-              >
-                Back
-              </button>
-
-              {step === 3 ? (
-                <button
-                  type="submit"
-                  className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Form Steps with Enhanced Styling */}
+              <div className="relative min-h-[200px]">
+                {/* Step 1 */}
+                <div
+                  className={`absolute w-full transition-all duration-500 ${
+                    step === 0
+                      ? "opacity-100 translate-x-0"
+                      : "opacity-0 translate-x-full pointer-events-none"
+                  }`}
                 >
-                  Submit
-                </button>
-              ) : (
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Your Name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email Address"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div
+                  className={`absolute w-full transition-all duration-500 ${
+                    step === 1
+                      ? "opacity-100 translate-x-0"
+                      : step < 1
+                      ? "opacity-0 -translate-x-full pointer-events-none"
+                      : "opacity-0 translate-x-full pointer-events-none"
+                  }`}
+                >
+                  <div className="space-y-4">
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="Phone Number"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    />
+                    <select
+                      name="event"
+                      value={formData.event}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all appearance-none"
+                    >
+                      <option value="" className="bg-black">
+                        Select Event
+                      </option>
+                      <option value="dance" className="bg-black">
+                        Classical Dance
+                      </option>
+                      <option value="music" className="bg-black">
+                        Musical Performance
+                      </option>
+                      <option value="drama" className="bg-black">
+                        Drama
+                      </option>
+                      <option value="poetry" className="bg-black">
+                        Poetry
+                      </option>
+                      <option value="other" className="bg-black">
+                        Other
+                      </option>
+                    </select>
+                    {formData.event === "other" && (
+                      <input
+                        type="text"
+                        name="customEvent"
+                        placeholder="Enter your event"
+                        value={formData.customEvent || ""}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div
+                  className={`absolute w-full transition-all duration-500 ${
+                    step === 2
+                      ? "opacity-100 translate-x-0"
+                      : step < 2
+                      ? "opacity-0 -translate-x-full pointer-events-none"
+                      : "opacity-0 translate-x-full pointer-events-none"
+                  }`}
+                >
+                  <div className="space-y-4">
+                    <input
+                      type="number"
+                      name="participants"
+                      placeholder="Number of Participants"
+                      value={formData.participants}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    />
+                    <input
+                      type="text"
+                      name="duration"
+                      placeholder="Performance Duration (minutes)"
+                      value={formData.duration}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Step 4 */}
+                <div
+                  className={`absolute w-full transition-all duration-500 ${
+                    step === 3
+                      ? "opacity-100 translate-x-0"
+                      : "opacity-0 translate-x-full pointer-events-none"
+                  }`}
+                >
+                  <div className="space-y-4">
+                    <input
+                      type="date"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    />
+                    <textarea
+                      name="requirements"
+                      placeholder="Special Requirements"
+                      value={formData.requirements}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none h-24"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced Navigation Buttons */}
+              <div className="flex justify-between gap-4 pt-4">
                 <button
                   type="button"
-                  onClick={nextStep}
-                  className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                  onClick={prevStep}
+                  disabled={step === 0}
+                  className={`px-6 py-2 rounded-lg transition-all ${
+                    step === 0
+                      ? "opacity-50 cursor-not-allowed bg-purple-900/20 text-purple-400/50"
+                      : "bg-black border border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:shadow-[0_0_10px_rgba(99,0,199,0.3)]"
+                  }`}
                 >
-                  Next
+                  Back
                 </button>
-              )}
-            </div>
-          </form>
+
+                {step === 3 ? (
+                  <button
+                    type="submit"
+                    className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                  >
+                    Submit
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                  >
+                    Next
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+          <BackButton onClick={() => setShowCulturalEvents(false)} />
         </div>
+
+        <style jsx global>{`
+          @keyframes float {
+            0%,
+            100% {
+              transform: translateY(0) rotate(0deg);
+            }
+            50% {
+              transform: translateY(-20px) rotate(10deg);
+            }
+          }
+
+          @keyframes shimmer {
+            0% {
+              background-position: 200% 0;
+            }
+            100% {
+              background-position: -200% 0;
+            }
+          }
+
+          .animate-floating {
+            animation: float 6s ease-in-out infinite;
+          }
+        `}</style>
       </div>
-
-      <style jsx global>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(10deg);
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            background-position: 200% 0;
-          }
-          100% {
-            background-position: -200% 0;
-          }
-        }
-
-        .animate-floating {
-          animation: float 6s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };
 
+import { Music2 } from "lucide-react";
+
 const AudienceForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     name: "",
+    batchId: "",
     email: "",
     phone: "",
   });
 
-  return (
-    <motion.form
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(formData);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await onSubmit(formData);
+      setShowSuccess(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const nextStep = () => {
+    setCurrentStep((prev) => Math.min(prev + 1, 2));
+  };
+
+  const prevStep = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
+  };
+
+  // Background floating elements
+  const FloatingElement = ({ children, className, style }) => (
+    <motion.div
+      className={`absolute ${className}`}
+      style={style} // Pass the style prop to the motion.div
+      animate={{
+        y: ["0%", "-20%", "0%"],
+        x: ["0%", "10%", "-10%", "0%"],
+        rotate: [0, 10, -10, 0],
+        scale: [1, 1.1, 0.9, 1],
+      }}
+      transition={{
+        duration: Math.random() * 5 + 3,
+        repeat: Infinity,
+        ease: "easeInOut",
       }}
     >
-      <CFormInput
-        label="Full Name"
-        icon={User}
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        required
-      />
-      <CFormInput
-        label="Email"
-        type="email"
-        icon={Mail}
-        value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-        required
-      />
-      <CFormInput
-        label="Phone Number"
-        type="tel"
-        icon={Phone}
-        value={formData.phone}
-        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-        required
-      />
-      <button
-        type="submit"
-        className="w-full bg-gradient-to-r from-cyan-700 to-cyan-600 text-white py-3 rounded-lg font-medium tracking-wider uppercase text-sm hover:from-cyan-600 hover:to-cyan-500 transition-all duration-500 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/30"
-      >
-        Submit
-      </button>
-    </motion.form>
+      {children}
+    </motion.div>
+  );
+
+  const floatingIcons = [
+    { Icon: Ticket, color: "text-purple-400" },
+    { Icon: Music, color: "text-blue-400" },
+    { Icon: Mic, color: "text-pink-400" },
+    { Icon: Sparkles, color: "text-yellow-400" },
+    { Icon: Music2, color: "text-green-400" },
+    { Icon: Headphones, color: "text-red-400" },
+    { Icon: Star, color: "text-orange-400" },
+    { Icon: PartyPopper, color: "text-indigo-400" },
+  ];
+
+  return (
+    <div className="min-h-screen relative overflow-hidden bg-transparent">
+      {/* Floating Background Elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        {Array.from({ length: 24 }).map((_, i) => {
+          const { Icon, color } = floatingIcons[i % floatingIcons.length];
+          const top = Math.random() * 100; // Random top position (0% to 100%)
+          const left = Math.random() * 100; // Random left position (0% to 100%)
+          const size = Math.random() * 2 + 1; // Random size between 1x and 3x
+
+          return (
+            <FloatingElement
+              key={i}
+              className={`${color} opacity-20`}
+              style={{
+                top: `${top}%`,
+                left: `${left}%`,
+                transform: `scale(${size})`,
+              }}
+            >
+              <Icon className="w-8 h-8" />
+            </FloatingElement>
+          );
+        })}
+      </div>
+      <div className="max-w-4xl mx-auto pt-12 px-6 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <CyberpunkTitle></CyberpunkTitle>
+          <div className={audiowide.className}>
+            <motion.div
+              className="text-purple-200 text-2xl font-light font-architype mr-5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              Two Days. Endless Possibilities.
+            </motion.div>
+          </div>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          {currentStep === 0 && (
+            <motion.div
+              key="benefits"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              className="backdrop-blur-xxl bg-black-15 rounded-3xl p-8 mb-8 border border-black/20 shadow-[0_8px_12px_rgba(126,34,206,0.4)]"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {[
+                  {
+                    icon: Trophy,
+                    title: "SIT and ENJOY",
+                    desc: "Get access to the Tickets",
+                    color: "bg-purple-400",
+                  },
+                  {
+                    icon: Music,
+                    title: "Live Shows",
+                    desc: "Your peers perform",
+                    color: "bg-blue-500",
+                  },
+                  {
+                    icon: Star,
+                    title: "Special Perks",
+                    desc: "Exclusive merchandise and swags",
+                    color: "bg-cyan-500",
+                  },
+                  {
+                    icon: PartyPopper,
+                    title: "Fun Events",
+                    desc: "Participate and Enjoy!",
+                    color: "bg-purple-500",
+                  },
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex items-center gap-4"
+                    whileHover={{ scale: 1.05, x: 10 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <motion.div
+                      className={`p-3 ${item.color} rounded-xl shadow-lg`}
+                      whileHover={{ rotate: [0, -10, 10, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <item.icon className="w-6 h-6 text-white" />
+                    </motion.div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white">
+                        {item.title}
+                      </h3>
+                      <p className="text-purple-200">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-8 w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold py-4 px-6 rounded-xl shadow-lg border border-white/20 backdrop-blur-sm"
+                onClick={nextStep}
+              >
+                Get Your Ticket Now
+              </motion.button>
+            </motion.div>
+          )}
+
+          {currentStep === 1 && (
+            <motion.div
+              key="personal-info"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              className="backdrop-blur-xl bg-black/10 rounded-3xl p-8 mb-8 border border-black/20 shadow-[0_8px_12px_rgba(126,34,206,0.4)]"
+            >
+              <h2 className="text-2xl font-semibold text-white mb-6">
+                Personal Information
+              </h2>
+              <div className="space-y-6">
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <label className="block text-purple-200 mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-black/5 border border-purple-500/30 focus:border-purple-500 text-white backdrop-blur-md"
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <label className="block text-purple-200 mb-2">Batch</label>
+                  <input
+                    type="text"
+                    value={formData.batchId}
+                    onChange={(e) => handleChange("batchId", e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-black/5 border border-purple-500/30 focus:border-purple-500 text-white backdrop-blur-md"
+                    placeholder="Enter your batch ID"
+                    required
+                  />
+                </motion.div>
+              </div>
+
+              <div className="flex gap-4 mt-8">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex-1 backdrop-blur-md bg-white/10 text-white font-semibold py-4 px-6 rounded-xl border border-white/20"
+                  onClick={prevStep}
+                >
+                  Back
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold py-4 px-6 rounded-xl shadow-lg border border-white/20"
+                  onClick={nextStep}
+                >
+                  Next
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+
+          {currentStep === 2 && (
+            <motion.div
+              key="contact-info"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              className="backdrop-blur-xl bg-black/10 rounded-3xl p-8 mb-8 border border-black/20 shadow-[0_8px_12px_rgba(126,34,206,0.4)]"
+            >
+              <h2 className="text-2xl font-semibold text-white mb-6">
+                Contact Details
+              </h2>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <label className="block text-purple-200 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleChange("email", e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-black/5 border border-purple-500/30 focus:border-purple-500 text-white backdrop-blur-md"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <label className="block text-purple-200 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleChange("phone", e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-black/5 border border-purple-500/30 focus:border-purple-500 text-white backdrop-blur-md"
+                    placeholder="Enter your phone number"
+                    required
+                  />
+                </motion.div>
+
+                <div className="flex gap-4 mt-8">
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex-1 backdrop-blur-md bg-white/10 text-white font-semibold py-4 px-6 rounded-xl border border-white/20"
+                    onClick={prevStep}
+                  >
+                    Back
+                  </motion.button>
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold py-4 px-6 rounded-xl shadow-lg border border-white/20"
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <Star className="animate-spin" />
+                        Processing...
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center gap-2">
+                        Complete Registration
+                        <ArrowRight className="w-5 h-5" />
+                      </div>
+                    )}
+                  </motion.button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <BackButton onClick={() => setShowCulturalEvents(false)} />
+
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 flex items-center justify-center backdrop-blur-lg"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-gradient-to-br from-purple-900/80 to-indigo-900/80 p-8 rounded-3xl max-w-md w-full mx-4 backdrop-blur-xl border border-white/20 shadow-2xl"
+            >
+              <motion.div
+                animate={{
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="w-24 h-24 mx-auto mb-6"
+              >
+                <Ticket className="w-full h-full text-purple-400" />
+              </motion.div>
+
+              <motion.h3
+                animate={{
+                  y: [0, -5, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                }}
+                className="text-3xl font-bold text-white text-center mb-4"
+              >
+                You're Going to the Festival! 🎉
+              </motion.h3>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="text-purple-200 text-center mb-8"
+              >
+                Check your email for your digital ticket and exclusive event
+                details.
+              </motion.p>
+
+              <motion.div className="space-y-4">
+                <motion.div
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                  className="flex items-center gap-3 text-white/80"
+                >
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>Digital ticket sent to your email</span>
+                </motion.div>
+
+                <motion.div
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.9 }}
+                  className="flex items-center gap-3 text-white/80"
+                >
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>Event schedule and map included</span>
+                </motion.div>
+
+                <motion.div
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 1.1 }}
+                  className="flex items-center gap-3 text-white/80"
+                >
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>VIP access code confirmed</span>
+                </motion.div>
+              </motion.div>
+
+              <div className="mt-8 flex justify-center">
+                <motion.div
+                  className="relative"
+                  animate={{
+                    rotate: [0, 360],
+                  }}
+                  transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute"
+                      style={{
+                        transform: `rotate(${i * 45}deg) translateY(-40px)`,
+                      }}
+                    >
+                      <Sparkles className="w-6 h-6 text-purple-400/60" />
+                    </motion.div>
+                  ))}
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                    }}
+                  >
+                    <PartyPopper className="w-12 h-12 text-purple-400" />
+                  </motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -1431,35 +2271,10 @@ const TechXtremeApp = () => {
       <AnimatedBackground />
       <AnimatePresence>
         {submitted ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="relative z-10 max-w-2xl p-12 bg-gray-900/70 rounded-3xl border border-cyan-800/50 backdrop-blur-xl"
-          >
-            <Zap
-              className="mx-auto mb-6 text-cyan-400 animate-pulse"
-              size={80}
-              strokeWidth={1.5}
-            />
-            <h2 className="text-4xl text-cyan-300 mb-6 tracking-wider uppercase">
-              Registration Completed
-            </h2>
-            <p className="text-gray-300 mb-8 leading-relaxed">
-              Your digital synchronization is complete. Quantum communication
-              protocols initialized.
-            </p>
-            <button
-              onClick={() => {
-                setSubmitted(false);
-                setActiveRegistration(null);
-              }}
-              className="bg-gradient-to-r from-cyan-700 to-cyan-600 text-white px-10 py-4 rounded-lg font-medium tracking-wider uppercase text-sm hover:from-cyan-600 hover:to-cyan-500 transition-all duration-500 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/30"
-            >
-              Return to Interface{" "}
-              <ArrowRight className="inline ml-2" size={18} />
-            </button>
-          </motion.div>
+          <CyberpunkSuccess
+            setSubmitted={setSubmitted}
+            setActiveRegistration={setActiveRegistration}
+          />
         ) : (
           <>
             {!activeRegistration && (
@@ -1471,10 +2286,7 @@ const TechXtremeApp = () => {
               >
                 {!showCulturalEvents ? (
                   <>
-                    <h1 className="text-7xl font-extralight mb-12 text-white tracking-wider animate-fade-in-up text-center">
-                      <span className="text-white font-thin">TECH</span>
-                      <span className="text-cyan-400 font-light">XTREME</span>
-                    </h1>
+                    <CyberpunkTitle />
 
                     <div className="grid grid-cols-2 gap-8 mb-16">
                       <EventCard

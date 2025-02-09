@@ -7,7 +7,10 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-  	extend: {
+	  extend: {
+		  fontFamily: {
+			  Architype: ["Architype Van D", "sans-serif"],
+		  },
   		animation: {
 				'pulse': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 				'spin-slow': 'spin 5s linear infinite',

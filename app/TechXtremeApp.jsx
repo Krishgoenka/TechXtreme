@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -26,7 +27,12 @@ import {
   Users,
 } from "lucide-react";
 import { Audiowide, Play } from "next/font/google";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+const glitchOffsets = Array.from({ length: 5 }, () => ({
+  x: (Math.random() - 0.5) * 100, // Random between -50 to 50
+  y: (Math.random() - 0.5) * 100, // Random between -50 to 50
+}));
 
 const playFont = Play({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -666,28 +672,51 @@ const EventCard = ({
   </motion.div>
 );
 
-const BackButton = ({ onClick }) => {
+const BackButton = () => {
+  const router = useRouter();
+
   return (
     <div className="flex justify-center mt-8">
       <button
-        onClick={onClick}
+        onClick={() => router.push("/")} // Redirects to home page
         className="relative px-12 py-6 rounded-lg font-medium tracking-wider uppercase text-sm text-white shadow-[0_4px_10px_rgba(128,0,128,0.5)] transition-all duration-500 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30
         before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-700 before:to-purple-600 before:opacity-0 before:transition-opacity before:duration-500 before:hover:opacity-100 overflow-hidden"
       >
         <span className="relative z-10 flex items-center">
-          <Users className="mr-3 inline" strokeWidth={1.5} />
-          Back to Main Page
+          🔙 Back to Main Page
         </span>
       </button>
     </div>
   );
 };
 const CyberpunkTitle = () => {
+  const [showGlitchEffect, setShowGlitchEffect] = useState(false);
+  const [showSliceEffect, setShowSliceEffect] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Trigger glitch effect
+      setShowGlitchEffect(true);
+
+      // After brief glitch, show slice effect
+      setTimeout(() => {
+        setShowGlitchEffect(false);
+        setShowSliceEffect(true);
+
+        // Remove slice effect after a duration
+        setTimeout(() => {
+          setShowSliceEffect(false);
+        }, 500); // Slice effect duration
+      }, 150); // Glitch duration
+    }, 1000); // Changed to 1 second cycle
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className={audiowide.className}>
       <motion.div className="relative py-8">
         <h1 className="relative text-7xl audiowide">
-          {/* Glitch container */}
           <motion.div
             className="relative flex justify-center items-center"
             animate={{
@@ -699,123 +728,24 @@ const CyberpunkTitle = () => {
               repeatType: "reverse",
             }}
           >
-            {/* Base text */}
-            <motion.div
-              className="absolute text-cyan-400"
-              animate={{
-                opacity: [1, 0.9, 1],
-              }}
-              transition={{
-                duration: 0.2,
-                repeat: Infinity,
-              }}
-            >
-              <motion.span
-                animate={{
-                  x: [-2, 2, -2],
-                  skewX: [-5, 5, -5],
-                }}
-                transition={{
-                  duration: 0.1,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                }}
-              >
-                TECH
-              </motion.span>
-              <motion.span
-                animate={{
-                  x: [2, -2, 2],
-                  skewX: [5, -5, 5],
-                }}
-                transition={{
-                  duration: 0.1,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                }}
-              >
-                XTREME
-              </motion.span>
-            </motion.div>
-
-            {/* Glitch layers */}
-            <div className="relative">
+            {/* Base text with glitch effect */}
+            {showGlitchEffect && (
               <motion.div
-                className="absolute inset-0 text-cyan-400/50 clip-glitch"
-                animate={{
-                  x: [-3, 3, -3],
-                  y: [1, -1, 1],
-                }}
+                className="absolute text-cyan-400"
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: [0, 1, 0], x: [-5, -2, -5] }}
                 transition={{
-                  duration: 0.1,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                }}
-                style={{
-                  clipPath: "polygon(0 15%, 100% 15%, 100% 30%, 0 30%)",
-                }}
-              >
-                TECHXTREME
-              </motion.div>
-
-              <motion.div
-                className="absolute inset-0 text-cyan-400/50 clip-glitch"
-                animate={{
-                  x: [3, -3, 3],
-                  y: [-1, 1, -1],
-                }}
-                transition={{
-                  duration: 0.1,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                }}
-                style={{
-                  clipPath: "polygon(0 45%, 100% 45%, 100% 65%, 0 65%)",
-                }}
-              >
-                TECHXTREME
-              </motion.div>
-
-              <motion.div
-                className="absolute inset-0 text-cyan-400/50 clip-glitch"
-                animate={{
-                  x: [-2, 2, -2],
-                  y: [1, -1, 1],
-                }}
-                transition={{
-                  duration: 0.1,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                }}
-                style={{
-                  clipPath: "polygon(0 75%, 100% 75%, 100% 90%, 0 90%)",
-                }}
-              >
-                TECHXTREME
-              </motion.div>
-
-              {/* Main text with shadow effect */}
-              <motion.div
-                className="relative text-cyan-400"
-                animate={{
-                  textShadow: [
-                    "0 0 5px #0ff, 0 0 10px #0ff", // Reduced glow layers
-                    "0 0 3px #0ff, 0 0 8px #0ff",
-                    "0 0 5px #0ff, 0 0 10px #0ff",
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "linear",
+                  duration: 0.15,
+                  times: [0, 0.5, 1],
                 }}
               >
                 <motion.span
                   animate={{
-                    skewX: [-2, 2, -2],
+                    x: [-2, 2, -2],
+                    skewX: [-5, 5, -5],
                   }}
                   transition={{
-                    duration: 0.5,
+                    duration: 0.1,
                     repeat: Infinity,
                     repeatType: "mirror",
                   }}
@@ -824,10 +754,11 @@ const CyberpunkTitle = () => {
                 </motion.span>
                 <motion.span
                   animate={{
-                    skewX: [2, -2, 2],
+                    x: [2, -2, 2],
+                    skewX: [5, -5, 5],
                   }}
                   transition={{
-                    duration: 0.5,
+                    duration: 0.1,
                     repeat: Infinity,
                     repeatType: "mirror",
                   }}
@@ -835,50 +766,62 @@ const CyberpunkTitle = () => {
                   XTREME
                 </motion.span>
               </motion.div>
+            )}
 
-              {/* Flicker effect */}
+            {/* Main text */}
+            <div className="relative">
+              {/* Static text with basic styling */}
               <motion.div
-                className="absolute inset-0 text-cyan-400 mix-blend-screen"
-                animate={{
-                  opacity: [0, 0.5, 0],
-                }}
-                transition={{
-                  duration: 0.1,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                  times: [0, 0.5, 1],
-                }}
-              >
-                TECHXTREME
-              </motion.div>
-            </div>
-
-            {/* Slice effect */}
-            {Array.from({ length: 5 }).map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute inset-0 text-cyan-400/30 overflow-hidden"
-                animate={{
-                  y: [-2, 2, -2],
-                  x: [1, -1, 1],
-                }}
-                transition={{
-                  duration: 0.2,
-                  repeat: Infinity,
-                  delay: i * 0.1,
-                }}
+                className="relative text-cyan-400 font-extrabold text-6xl"
                 style={{
-                  clipPath: `polygon(0 ${i * 20}%, 100% ${i * 20}%, 100% ${
-                    (i + 1) * 20
-                  }%, 0 ${(i + 1) * 20}%)`,
+                  textShadow: `
+                    2px 2px 4px rgba(0, 255, 255, 0.6),   /* Bottom right highlight */
+                    -2px -2px 4px rgba(0, 100, 100, 0.8), /* Top left shadow */
+                    inset 2px 2px 2px rgba(255, 255, 255, 0.3),  /* Inner highlight */
+                    inset -2px -2px 2px rgba(0, 0, 0, 0.7) /* Inner shadow */
+                  `,
                 }}
               >
-                TECHXTREME
+                <motion.span>TECH</motion.span>
+                <motion.span>XTREME</motion.span>
               </motion.div>
-            ))}
+
+              {/* Slice effect that appears after glitch */}
+              {showSliceEffect && (
+                <>
+                  {glitchOffsets.map((offset, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute inset-0 text-cyan-400/30 overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        opacity: [0.2, 1, 0.5, 1, 0.3], // Flickering effect
+                        y: [offset.y * -1, offset.y, offset.y * 1.2], // Moves unpredictably
+                        x: [offset.x, offset.x * -1, offset.x * 1.1], // Moves in random directions
+                      }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: i * 0.05,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                      }}
+                      style={{
+                        clipPath: `polygon(0 ${i * 20}%, 100% ${
+                          i * 20
+                        }%, 100% ${(i + 1) * 20}%, 0 ${(i + 1) * 20}%)`,
+                        transform: `translate(${offset.x}px, ${offset.y}px)`, // Random movement
+                      }}
+                    >
+                      TECHXTREME
+                    </motion.div>
+                  ))}
+                </>
+              )}
+            </div>
           </motion.div>
 
-          {/* Slice lines */}
+          {/* Static slice lines */}
           {Array.from({ length: 10 }).map((_, i) => (
             <motion.div
               key={i}
@@ -924,9 +867,25 @@ const IdeathonForm = ({ onSubmit }) => {
     setStep(step - 1);
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
+  const handleFormSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:10000/api/submit", {
+        formType: "ideathon",
+        name: formData.name,
+        email: formData.email,
+        batchId: formData.batchId,
+        teamName: formData.teamName,
+        projectTitle: formData.projectTitle,
+        description: formData.description,
+      });
+
+      console.log(response.data.message);
+    } catch (error) {
+      console.error(
+        "Error submitting form:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   // Enhanced animations
@@ -1276,12 +1235,19 @@ const GenAIForm = ({ onSubmit }) => {
     }, 300);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (page === formFields.length - 1) {
-      onSubmit(formData);
-    } else {
-      handleNext();
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:10000/api/submit", {
+        formType: "genai",
+        ...formData,
+      });
+
+      console.log(response.data.message);
+    } catch (error) {
+      console.error(
+        "Error submitting form:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -1474,9 +1440,20 @@ const CulturalForm = ({ onSubmit }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:10000/api/submit", {
+        formType: "cultural",
+        ...formData,
+      });
+
+      console.log(response.data.message);
+    } catch (error) {
+      console.error(
+        "Error submitting form:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   const nextStep = () => setStep(step + 1);
@@ -1768,7 +1745,7 @@ const CulturalForm = ({ onSubmit }) => {
               </div>
             </form>
           </div>
-          <BackButton onClick={() => setShowCulturalEvents(false)} />
+          <BackButton />
         </div>
 
         <style jsx global>{`
@@ -1821,9 +1798,18 @@ const AudienceForm = ({ onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
     try {
-      await onSubmit(formData);
-      setShowSuccess(true);
+      const response = await axios.post("http://localhost:10000/api/submit", {
+        formType: "audience",
+        ...formData,
+      });
+
+      if (response.status === 201) {
+        setShowSuccess(true);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -2127,7 +2113,7 @@ const AudienceForm = ({ onSubmit }) => {
             </motion.div>
           )}
         </AnimatePresence>
-        <BackButton onClick={() => setShowCulturalEvents(false)} />
+        <BackButton />
 
         {showSuccess && (
           <motion.div
@@ -2206,7 +2192,7 @@ const AudienceForm = ({ onSubmit }) => {
                   className="flex items-center gap-3 text-white/80"
                 >
                   <Check className="w-5 h-5 text-green-400" />
-                  <span>VIP access code confirmed</span>
+                  <span>Check In will be done at the Venue</span>
                 </motion.div>
               </motion.div>
 

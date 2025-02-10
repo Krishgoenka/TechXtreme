@@ -88,6 +88,7 @@ const CyberpunkSuccess = ({ setSubmitted, setActiveRegistration }) => {
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
+  const router = useRouter();
 
   const terminalText = [
     "Initializing quantum protocols...",
@@ -248,10 +249,7 @@ const CyberpunkSuccess = ({ setSubmitted, setActiveRegistration }) => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setSubmitted(false);
-                      setActiveRegistration(null);
-                    }}
+                    onClick={() => router.push("/")}
                     className="group relative px-8 py-3 bg-cyan-500/10 rounded-lg overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/40 to-cyan-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -981,23 +979,19 @@ const IdeathonForm = ({ onSubmit }) => {
   };
 
   const handleNext = () => {
-    setStep(step + 1);
+    if (step < 3) setStep(step + 1);
   };
 
   const handleBack = () => {
     setStep(step - 1);
   };
 
-  const handleFormSubmit = async () => {
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post("http://localhost:10000/api/submit", {
         formType: "ideathon",
-        name: formData.name,
-        email: formData.email,
-        batchId: formData.batchId,
-        teamName: formData.teamName,
-        projectTitle: formData.projectTitle,
-        description: formData.description,
+        ...formData,
       });
 
       console.log(response.data.message);
@@ -1285,7 +1279,6 @@ const IdeathonForm = ({ onSubmit }) => {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                           type="submit"
-                          // onClick={handle}
                           className="relative px-8 py-3 font-[Audiowide] text-cyan-300
                     border border-cyan-500 rounded-lg backdrop-blur-lg
                     bg-black/10 shadow-md shadow-cyan-500/20

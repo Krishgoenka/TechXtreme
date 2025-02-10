@@ -989,10 +989,13 @@ const IdeathonForm = ({ onSubmit }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:10000/api/submit", {
-        formType: "ideathon",
-        ...formData,
-      });
+      const response = await axios.post(
+        "http://techxtreme.onrender.com/api/submit",
+        {
+          formType: "ideathon",
+          ...formData,
+        }
+      );
 
       console.log(response.data.message);
       setSuccess(true);
@@ -1361,10 +1364,13 @@ const GenAIForm = ({ onSubmit }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:10000/api/submit", {
-        formType: "genai",
-        ...formData,
-      });
+      const response = await axios.post(
+        "http://techxtreme.onrender.com/api/submit",
+        {
+          formType: "genai",
+          ...formData,
+        }
+      );
 
       console.log(response.data.message);
       setIsSubmitted(true);
@@ -1580,10 +1586,13 @@ const CulturalForm = ({ onSubmit }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:10000/api/submit", {
-        formType: "cultural",
-        ...formData,
-      });
+      const response = await axios.post(
+        "http://techxtreme.onrender.com/api/submit",
+        {
+          formType: "cultural",
+          ...formData,
+        }
+      );
 
       console.log(response.data.message);
       setIsSubmitted(true); // Mark form as submitted
@@ -1947,10 +1956,13 @@ const AudienceForm = ({ onSubmit }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post("http://localhost:10000/api/submit", {
-        formType: "audience",
-        ...formData,
-      });
+      const response = await axios.post(
+        "http://techxtreme.onrender.com/api/submit",
+        {
+          formType: "audience",
+          ...formData,
+        }
+      );
 
       if (response.status === 201) {
         setShowSuccess(true);

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TechXtreme",
+  title: "Aritra Bhaiya Shaadi",
   description: "Two Days. Endless Possibilities",
 };
 

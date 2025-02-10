@@ -803,7 +803,7 @@ const BackButton = () => {
         before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-700 before:to-purple-600 before:opacity-0 before:transition-opacity before:duration-500 before:hover:opacity-100 overflow-hidden"
       >
         <span className="relative z-10 flex items-center">
-          🔙 Back to Main Page
+          Back to Main Page
         </span>
       </button>
     </div>
@@ -974,6 +974,7 @@ const IdeathonForm = ({ onSubmit }) => {
     projectTitle: "",
     description: "",
   });
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -1000,6 +1001,7 @@ const IdeathonForm = ({ onSubmit }) => {
       });
 
       console.log(response.data.message);
+      setSuccess(true);
     } catch (error) {
       console.error(
         "Error submitting form:",
@@ -1062,238 +1064,245 @@ const IdeathonForm = ({ onSubmit }) => {
   };
 
   return (
-    <div className={audiowide.className}>
-      <div className="min-h-screen flex items-center justify-center p-4 ">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-          className="w-full max-w-2xl p-8 rounded-xl backdrop-blur-lg bg-grey/1 border border-cyan-900/70 shadow-xl border-glow "
-        >
-          <motion.h2
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 100 }}
-            className="text-3xl mb-8 text-cyan-500 font-[Audiowide] text-center"
-          >
-            Ideathon Registration
-          </motion.h2>
+    <div className="min-h-screen flex items-center justify-center p-4 ">
+      {success ? (
+        <CyberpunkSuccess />
+      ) : (
+        <>
+          <div className={audiowide.className}>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+              className="w-full max-w-2xl p-8 rounded-xl backdrop-blur-lg bg-grey/1 border border-cyan-900/70 shadow-xl border-glow "
+            >
+              <motion.h2
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 100 }}
+                className="text-3xl mb-8 text-cyan-500 font-[Audiowide] text-center"
+              >
+                Ideathon Registration
+              </motion.h2>
 
-          <form
-            onSubmit={handleFormSubmit}
-            className="space-y-6"
-            autoComplete="off"
-          >
-            <AnimatePresence mode="wait">
-              {step === 1 && (
-                <motion.div
-                  key="step1"
-                  variants={formVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="space-y-6"
-                >
-                  <div className="flex flex-col gap-6">
-                    <motion.div variants={inputVariants}>
-                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
-                        Name
-                      </label>
-                      <motion.input
-                        whileFocus={{ scale: 1.02 }}
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 placeholder-cyan-300 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 transition-all duration-300 autofill:bg-black/50 autofill:text-cyan-100"
-                        required
-                      />
-                    </motion.div>
-                    <motion.div variants={inputVariants}>
-                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
-                        Email
-                      </label>
-                      <motion.input
-                        whileFocus={{ scale: 1.02 }}
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
-                        required
-                      />
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    className="flex justify-end"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleNext}
-                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+              <form
+                onSubmit={handleFormSubmit}
+                className="space-y-6"
+                autoComplete="off"
+              >
+                <AnimatePresence mode="wait">
+                  {step === 1 && (
+                    <motion.div
+                      key="step1"
+                      variants={formVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      className="space-y-6"
+                    >
+                      <div className="flex flex-col gap-6">
+                        <motion.div variants={inputVariants}>
+                          <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                            Name
+                          </label>
+                          <motion.input
+                            whileFocus={{ scale: 1.02 }}
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 placeholder-cyan-300 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 transition-all duration-300 autofill:bg-black/50 autofill:text-cyan-100"
+                            required
+                          />
+                        </motion.div>
+                        <motion.div variants={inputVariants}>
+                          <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                            Email
+                          </label>
+                          <motion.input
+                            whileFocus={{ scale: 1.02 }}
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                            required
+                          />
+                        </motion.div>
+                      </div>
+                      <motion.div
+                        className="flex justify-end"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          type="button"
+                          onClick={handleNext}
+                          className="relative px-8 py-3 font-[Audiowide] text-cyan-300
                     border border-cyan-500 rounded-lg backdrop-blur-lg
                     bg-black/10 shadow-md shadow-cyan-500/20
                     transition-transform duration-300 ease-in-out"
-                    >
-                      Proceed
-                    </motion.button>
-                  </motion.div>
-                </motion.div>
-              )}
+                        >
+                          Proceed
+                        </motion.button>
+                      </motion.div>
+                    </motion.div>
+                  )}
 
-              {step === 2 && (
-                <motion.div
-                  key="step2"
-                  variants={formVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="space-y-6"
-                >
-                  <div className="flex flex-col gap-6">
-                    <motion.div variants={inputVariants}>
-                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
-                        Batch ID
-                      </label>
-                      <motion.input
-                        whileFocus={{ scale: 1.02 }}
-                        type="text"
-                        name="batchId"
-                        value={formData.batchId}
-                        onChange={handleChange}
-                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
-                        required
-                      />
-                    </motion.div>
-                    <motion.div variants={inputVariants}>
-                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
-                        Team Name
-                      </label>
-                      <motion.input
-                        whileFocus={{ scale: 1.02 }}
-                        type="text"
-                        name="teamName"
-                        value={formData.teamName}
-                        onChange={handleChange}
-                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
-                        required
-                      />
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    className="flex justify-between"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleBack}
-                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                  {step === 2 && (
+                    <motion.div
+                      key="step2"
+                      variants={formVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      className="space-y-6"
+                    >
+                      <div className="flex flex-col gap-6">
+                        <motion.div variants={inputVariants}>
+                          <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                            Batch ID
+                          </label>
+                          <motion.input
+                            whileFocus={{ scale: 1.02 }}
+                            type="text"
+                            name="batchId"
+                            value={formData.batchId}
+                            onChange={handleChange}
+                            className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                            required
+                          />
+                        </motion.div>
+                        <motion.div variants={inputVariants}>
+                          <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                            Team Name
+                          </label>
+                          <motion.input
+                            whileFocus={{ scale: 1.02 }}
+                            type="text"
+                            name="teamName"
+                            value={formData.teamName}
+                            onChange={handleChange}
+                            className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                            required
+                          />
+                        </motion.div>
+                      </div>
+                      <motion.div
+                        className="flex justify-between"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          type="button"
+                          onClick={handleBack}
+                          className="relative px-8 py-3 font-[Audiowide] text-cyan-300
                     border border-cyan-500 rounded-lg backdrop-blur-lg
                     bg-black/10 shadow-md shadow-cyan-500/20
                     transition-transform duration-300 ease-in-out"
-                    >
-                      Back
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleNext}
-                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                        >
+                          Back
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          type="button"
+                          onClick={handleNext}
+                          className="relative px-8 py-3 font-[Audiowide] text-cyan-300
                     border border-cyan-500 rounded-lg backdrop-blur-lg
                     bg-black/10 shadow-md shadow-cyan-500/20
                     transition-transform duration-300 ease-in-out"
-                    >
-                      Proceed
-                    </motion.button>
-                  </motion.div>
-                </motion.div>
-              )}
+                        >
+                          Proceed
+                        </motion.button>
+                      </motion.div>
+                    </motion.div>
+                  )}
 
-              {step === 3 && (
-                <motion.div
-                  key="step3"
-                  variants={formVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="space-y-6"
-                >
-                  <div className="flex flex-col gap-6">
-                    <motion.div variants={inputVariants}>
-                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
-                        Project Title
-                      </label>
-                      <motion.input
-                        whileFocus={{ scale: 1.02 }}
-                        type="text"
-                        name="projectTitle"
-                        value={formData.projectTitle}
-                        onChange={handleChange}
-                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
-                        required
-                      />
-                    </motion.div>
-                    <motion.div variants={inputVariants}>
-                      <label className="block text-cyan-400 mb-2 font-[Audiowide]">
-                        Brief Description
-                      </label>
-                      <motion.textarea
-                        whileFocus={{ scale: 1.02 }}
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors h-24"
-                        required
-                      />
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    className="flex justify-between"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleNext}
-                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                  {step === 3 && (
+                    <motion.div
+                      key="step3"
+                      variants={formVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      className="space-y-6"
+                    >
+                      <div className="flex flex-col gap-6">
+                        <motion.div variants={inputVariants}>
+                          <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                            Project Title
+                          </label>
+                          <motion.input
+                            whileFocus={{ scale: 1.02 }}
+                            type="text"
+                            name="projectTitle"
+                            value={formData.projectTitle}
+                            onChange={handleChange}
+                            className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors"
+                            required
+                          />
+                        </motion.div>
+                        <motion.div variants={inputVariants}>
+                          <label className="block text-cyan-400 mb-2 font-[Audiowide]">
+                            Brief Description
+                          </label>
+                          <motion.textarea
+                            whileFocus={{ scale: 1.02 }}
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            className="w-full bg-black/50 border border-cyan-900/50 rounded-lg p-3 text-cyan-100 focus:outline-none focus:border-cyan-500 transition-colors h-24"
+                            required
+                          />
+                        </motion.div>
+                      </div>
+                      <motion.div
+                        className="flex justify-between"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          type="button"
+                          onClick={handleNext}
+                          className="relative px-8 py-3 font-[Audiowide] text-cyan-300
                     border border-cyan-500 rounded-lg backdrop-blur-lg
                     bg-black/10 shadow-md shadow-cyan-500/20
                     transition-transform duration-300 ease-in-out"
-                    >
-                      Back
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="submit"
-                      // onClick={handle}
-                      className="relative px-8 py-3 font-[Audiowide] text-cyan-300
+                        >
+                          Back
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          type="submit"
+                          // onClick={handle}
+                          className="relative px-8 py-3 font-[Audiowide] text-cyan-300
                     border border-cyan-500 rounded-lg backdrop-blur-lg
                     bg-black/10 shadow-md shadow-cyan-500/20
                     transition-transform duration-300 ease-in-out"
-                    >
-                      Initialize
-                    </motion.button>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </form>
-        </motion.div>
-      </div>
+                        >
+                          Initialize
+                        </motion.button>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </form>
+            </motion.div>
+            <BackButton />
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -1311,6 +1320,8 @@ const GenAIForm = ({ onSubmit }) => {
     cloudUrl: "",
     tshirtSize: "",
   });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const formFields = [
     [
@@ -1363,6 +1374,7 @@ const GenAIForm = ({ onSubmit }) => {
       });
 
       console.log(response.data.message);
+      setIsSubmitted(true);
     } catch (error) {
       console.error(
         "Error submitting form:",
@@ -1379,149 +1391,161 @@ const GenAIForm = ({ onSubmit }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 ">
-      <div className="w-full max-w-2xl backdrop-blur-lg bg-black/10 rounded-xl shadow-2xl overflow-hidden border border-cyan-500/20">
-        {/* Decorative header */}
-        <div className="relative h-16 bg-cyan-500/10 flex items-center justify-center overflow-hidden">
-          <button
-            onClick={() => setShowCulturalForm(false)}
-            className="absolute left-4 top-4 p-2 text-white transition-all duration-300 hover:scale-110"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+      {isSubmitted ? (
+        <CyberpunkSuccess />
+      ) : (
+        <div className="w-full max-w-2xl backdrop-blur-lg bg-black/10 rounded-xl shadow-2xl overflow-hidden border border-cyan-500/20">
+          {/* Decorative header */}
+          <div className="relative h-16 bg-cyan-500/10 flex items-center justify-center overflow-hidden">
+            <button
+              onClick={() => setShowCulturalForm(false)}
+              className="absolute left-4 top-4 p-2 text-white transition-all duration-300 hover:scale-110"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
 
-          <div className="absolute animate-spin-slow">
-            <Cpu className="w-32 h-32 text-cyan-500/20" />
-          </div>
-          <div className="relative z-10 animate-bounce">
-            <Bot className="w-8 h-8 text-cyan-400" />
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Terminal-style Progress Bar */}
-          <div className="bg-gray-900/60 rounded-lg p-4 font-mono text-sm">
-            <div className="flex items-center gap-2 mb-2 text-cyan-400">
-              <Terminal className="w-4 h-4" />
-              <span className="animate-pulse"> GENAI.FORM.progress_status</span>
+            <div className="absolute animate-spin-slow">
+              <Cpu className="w-32 h-32 text-cyan-500/20" />
             </div>
-            {formFields.map((_, idx) => (
-              <div key={idx} className="relative">
-                <div
-                  className={`flex items-center gap-2 p-1 ${
-                    idx === page
-                      ? "text-cyan-300"
-                      : idx < page
-                      ? "text-green-400"
-                      : "text-gray-500"
-                  }`}
-                >
-                  <div className="w-24 text-right">{`SECTION_${idx + 1}`}</div>
-                  <div className="flex-1 flex items-center gap-2">
-                    <div
-                      className={`h-0.5 flex-1 ${
-                        idx <= page ? "bg-cyan-400" : "bg-gray-600"
-                      }`}
-                    >
-                      {idx <= page && (
-                        <div className="h-full w-full animate-loading-bar bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
-                      )}
-                    </div>
-                    <div
-                      className={`text-xs whitespace-nowrap ${
-                        idx === page ? "animate-pulse" : ""
-                      }`}
-                    >
-                      {getProgressText(idx)}
+            <div className="relative z-10 animate-bounce">
+              <Bot className="w-8 h-8 text-cyan-400" />
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            {/* Terminal-style Progress Bar */}
+            <div className="bg-gray-900/60 rounded-lg p-4 font-mono text-sm">
+              <div className="flex items-center gap-2 mb-2 text-cyan-400">
+                <Terminal className="w-4 h-4" />
+                <span className="animate-pulse">
+                  {" "}
+                  GENAI.FORM.progress_status
+                </span>
+              </div>
+              {formFields.map((_, idx) => (
+                <div key={idx} className="relative">
+                  <div
+                    className={`flex items-center gap-2 p-1 ${
+                      idx === page
+                        ? "text-cyan-300"
+                        : idx < page
+                        ? "text-green-400"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    <div className="w-24 text-right">{`SECTION_${
+                      idx + 1
+                    }`}</div>
+                    <div className="flex-1 flex items-center gap-2">
+                      <div
+                        className={`h-0.5 flex-1 ${
+                          idx <= page ? "bg-cyan-400" : "bg-gray-600"
+                        }`}
+                      >
+                        {idx <= page && (
+                          <div className="h-full w-full animate-loading-bar bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
+                        )}
+                      </div>
+                      <div
+                        className={`text-xs whitespace-nowrap ${
+                          idx === page ? "animate-pulse" : ""
+                        }`}
+                      >
+                        {getProgressText(idx)}
+                      </div>
                     </div>
                   </div>
                 </div>
+              ))}
+              <div className="mt-2 text-xs text-cyan-400/60 border-t border-cyan-500/20 pt-2">
+                {`// Total Progress: ${Math.round(
+                  (page / (formFields.length - 1)) * 100
+                )}%`}
               </div>
-            ))}
-            <div className="mt-2 text-xs text-cyan-400/60 border-t border-cyan-500/20 pt-2">
-              {`// Total Progress: ${Math.round(
-                (page / (formFields.length - 1)) * 100
-              )}%`}
             </div>
-          </div>
 
-          {/* Form fields with transition */}
-          <div
-            className={`space-y-6 transition-all duration-300 transform
+            {/* Form fields with transition */}
+            <div
+              className={`space-y-6 transition-all duration-300 transform
             ${
               isTransitioning
                 ? "opacity-0 translate-x-full"
                 : "opacity-100 translate-x-0"
             }`}
-          >
-            {formFields[page].map((field) => (
-              <div key={field.name} className="space-y-2">
-                <label className="block text-cyan-300 text-sm font-medium">
-                  {field.label}
-                </label>
-                {field.type === "select" ? (
-                  <select
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleInputChange}
-                    className="w-full bg-black/5 backdrop-blur-sm border-2 border-cyan-500/30 rounded-lg
+            >
+              {formFields[page].map((field) => (
+                <div key={field.name} className="space-y-2">
+                  <label className="block text-cyan-300 text-sm font-medium">
+                    {field.label}
+                  </label>
+                  {field.type === "select" ? (
+                    <select
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleInputChange}
+                      className="w-full bg-black/5 backdrop-blur-sm border-2 border-cyan-500/30 rounded-lg
                     px-4 py-2 text-white focus:border-cyan-400 focus:ring-cyan-400 transition-colors
                     hover:border-cyan-400/50"
-                  >
-                    <option value="">Select size</option>
-                    {field.options.map((option) => (
-                      <option
-                        key={option}
-                        value={option}
-                        className="bg-black-800"
-                      >
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleInputChange}
-                    className="w-full bg-black/5 backdrop-blur-sm border-2 border-cyan-500/30 rounded-lg
+                    >
+                      <option value="">Select size</option>
+                      {field.options.map((option) => (
+                        <option
+                          key={option}
+                          value={option}
+                          className="bg-black-800"
+                        >
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleInputChange}
+                      className="w-full bg-black/5 backdrop-blur-sm border-2 border-cyan-500/30 rounded-lg
                     px-4 py-2 text-white focus:border-cyan-400 focus:ring-cyan-400 transition-colors
                     hover:border-cyan-400/50"
-                    required
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+                      required
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
 
-          {/* Navigation buttons */}
-          <div className="flex justify-between pt-4">
-            {page > 0 && (
-              <button
-                type="button"
-                onClick={handleBack}
-                className="flex items-center px-4 py-2 text-cyan-300 hover:text-cyan-100
+            {/* Navigation buttons */}
+            <div className="flex justify-between pt-4">
+              {page > 0 && (
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="flex items-center px-4 py-2 text-cyan-300 hover:text-cyan-100
                 transition-all hover:scale-105 active:scale-95 backdrop-blur-sm bg-white/5
                 rounded-lg border border-cyan-500/30"
-              >
-                <ChevronLeft className="w-5 h-5 mr-2" />
-                Back
-              </button>
-            )}
-            <button
-              type="submit"
-              className="flex items-center bg-cyan-500/20 backdrop-blur-sm border border-cyan-400/50
-              hover:bg-cyan-400/30 text-cyan-300 px-6 py-2 rounded-lg ml-auto transition-all
-              hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-cyan-400/20"
-            >
-              {page === formFields.length - 1 ? "Submit" : "Next"}
-              {page !== formFields.length - 1 && (
-                <ChevronRight className="w-5 h-5 ml-2" />
+                >
+                  <ChevronLeft className="w-5 h-5 mr-2" />
+                  Back
+                </button>
               )}
-            </button>
-          </div>
-        </form>
-      </div>
+              <button
+                type="button"
+                onClick={
+                  page === formFields.length - 1 ? handleSubmit : handleNext
+                } // Dynamic function call
+                className="flex items-center bg-cyan-500/20 backdrop-blur-sm border border-cyan-400/50
+  hover:bg-cyan-400/30 text-cyan-300 px-6 py-2 rounded-lg ml-auto transition-all
+  hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-cyan-400/20"
+              >
+                {page === formFields.length - 1 ? "Submit" : "Next"}
+                {page !== formFields.length - 1 && (
+                  <ChevronRight className="w-5 h-5 ml-2" />
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
@@ -1541,6 +1565,7 @@ const CulturalForm = ({ onSubmit }) => {
     participants: "",
     duration: "",
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Progress icons based on cultural events
   const progressIcons = [
@@ -1568,6 +1593,7 @@ const CulturalForm = ({ onSubmit }) => {
       });
 
       console.log(response.data.message);
+      setIsSubmitted(true); // Mark form as submitted
     } catch (error) {
       console.error(
         "Error submitting form:",
@@ -1581,318 +1607,326 @@ const CulturalForm = ({ onSubmit }) => {
 
   return (
     <div className={`${playFont.className} text-xl`}>
-      <div className="min-h-screen p-6 flex items-center justify-center bg-black relative overflow-hidden">
-        {/* Cyberpunk Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,0,199,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,0,199,0.15)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,rgba(99,0,199,0.15),transparent)]" />
-        </div>
+      {isSubmitted ? (
+        <CyberPunkSuccess />
+      ) : (
+        <div className="min-h-screen p-6 flex items-center justify-center bg-black relative overflow-hidden">
+          {/* Cyberpunk Grid Background */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,0,199,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,0,199,0.15)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,rgba(99,0,199,0.15),transparent)]" />
+          </div>
 
-        {/* Enhanced Floating Elements */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          {[...Array(18)].map((_, i) => (
-            <div
-              key={`music-${i}`}
-              className="absolute animate-floating"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animation: `float ${10 + Math.random() * 5}s infinite`,
-                animationDelay: `${i * 0.5}s`,
-              }}
-            >
-              <Music
-                className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
-                size={40 + Math.random() * 40}
-                style={{ transform: `rotate(${Math.random() * 360}deg)` }}
-              />
-            </div>
-          ))}
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`party-${i}`}
-              className="absolute animate-floating"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animation: `float ${8 + Math.random() * 5}s infinite`,
-                animationDelay: `${i * 0.7}s`,
-              }}
-            >
-              <PartyPopper
-                className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
-                size={30 + Math.random() * 30}
-                style={{ transform: `rotate(${Math.random() * 360}deg)` }}
-              />
-            </div>
-          ))}
-        </div>
-
-        <div className="w-full max-w-md relative">
-          {/* Enhanced Form Container */}
-          <div className="backdrop-blur-xl bg-black/10 rounded-2xl p-8 shadow-[0_0_20px_rgba(99,0,199,0.3)] border border-purple-500/30">
-            {/* Enhanced Header */}
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
-                <Sparkles className="w-8 h-8 text-purple-500" />
-                Cultural Fest
-                <Star className="w-8 h-8 text-purple-500" />
-              </h2>
-              <div className="mt-2 text-purple-400/80">Registration Form</div>
-            </div>
-
-            {/* Enhanced Cultural Progress Bar */}
-            <div className="mb-12 relative">
-              {/* Progress Line */}
-              <div className="h-1 bg-purple-900/30 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-600 rounded-full transition-all duration-500"
-                  style={{
-                    width: `${(step + 1) * 25}%`,
-                    backgroundSize: "200% 100%",
-                    animation: "shimmer 2s linear infinite",
-                  }}
+          {/* Enhanced Floating Elements */}
+          <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            {[...Array(18)].map((_, i) => (
+              <div
+                key={`music-${i}`}
+                className="absolute animate-floating"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  animationName: "float",
+                  animationDuration: `${10 + Math.random() * 5}s`,
+                  animationIterationCount: "infinite",
+                  animationDelay: `${i * 0.5}s`,
+                }}
+              >
+                <Music
+                  className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+                  size={40 + Math.random() * 40}
+                  style={{ transform: `rotate(${Math.random() * 360}deg)` }}
                 />
               </div>
-
-              {/* Cultural Icons Progress */}
-              <div className="absolute -bottom-8 left-0 w-full flex justify-between mt-4">
-                {progressIcons.map((icon, i) => {
-                  const Icon = icon.icon;
-                  return (
-                    <div
-                      key={i}
-                      className={`flex flex-col items-center transition-all duration-500 ${
-                        i <= step ? "text-purple-400" : "text-purple-900"
-                      }`}
-                    >
-                      <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-500 ${
-                          i <= step
-                            ? "bg-purple-500 shadow-[0_0_10px_rgba(99,0,199,0.5)]"
-                            : "bg-purple-900/30"
-                        }`}
-                      >
-                        <Icon
-                          size={20}
-                          className={
-                            i <= step ? "text-black" : "text-purple-700"
-                          }
-                        />
-                      </div>
-                      <span className="text-xs mt-1">{icon.label}</span>
-                    </div>
-                  );
-                })}
+            ))}
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`party-${i}`}
+                className="absolute animate-floating"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  animationName: "float",
+                  animationDuration: `${10 + Math.random() * 5}s`,
+                  animationIterationCount: "infinite",
+                  animationDelay: `${i * 0.5}s`,
+                }}
+              >
+                <PartyPopper
+                  className="text-purple-500/30 drop-shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+                  size={30 + Math.random() * 30}
+                  style={{ transform: `rotate(${Math.random() * 360}deg)` }}
+                />
               </div>
-            </div>
+            ))}
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Form Steps with Enhanced Styling */}
-              <div className="relative min-h-[200px]">
-                {/* Step 1 */}
-                <div
-                  className={`absolute w-full transition-all duration-500 ${
-                    step === 0
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 translate-x-full pointer-events-none"
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Your Name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                    />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email Address"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                    />
-                  </div>
+          <div className="w-full max-w-md relative">
+            {/* Enhanced Form Container */}
+            <div className="backdrop-blur-xl bg-black/10 rounded-2xl p-8 shadow-[0_0_20px_rgba(99,0,199,0.3)] border border-purple-500/30">
+              {/* Enhanced Header */}
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
+                  <Sparkles className="w-8 h-8 text-purple-500" />
+                  Cultural Fest
+                  <Star className="w-8 h-8 text-purple-500" />
+                </h2>
+                <div className="mt-2 text-purple-400/80">Registration Form</div>
+              </div>
+
+              {/* Enhanced Cultural Progress Bar */}
+              <div className="mb-12 relative">
+                {/* Progress Line */}
+                <div className="h-1 bg-purple-900/30 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-600 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${(step + 1) * 25}%`,
+                      backgroundSize: "200% 100%",
+                      animation: "shimmer 2s linear infinite",
+                    }}
+                  />
                 </div>
 
-                {/* Step 2 */}
-                <div
-                  className={`absolute w-full transition-all duration-500 ${
-                    step === 1
-                      ? "opacity-100 translate-x-0"
-                      : step < 1
-                      ? "opacity-0 -translate-x-full pointer-events-none"
-                      : "opacity-0 translate-x-full pointer-events-none"
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Phone Number"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                    />
-                    <select
-                      name="event"
-                      value={formData.event}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all appearance-none"
-                    >
-                      <option value="" className="bg-black">
-                        Select Event
-                      </option>
-                      <option value="dance" className="bg-black">
-                        Classical Dance
-                      </option>
-                      <option value="music" className="bg-black">
-                        Musical Performance
-                      </option>
-                      <option value="drama" className="bg-black">
-                        Drama
-                      </option>
-                      <option value="poetry" className="bg-black">
-                        Poetry
-                      </option>
-                      <option value="other" className="bg-black">
-                        Other
-                      </option>
-                    </select>
-                    {formData.event === "other" && (
+                {/* Cultural Icons Progress */}
+                <div className="absolute -bottom-8 left-0 w-full flex justify-between mt-4">
+                  {progressIcons.map((icon, i) => {
+                    const Icon = icon.icon;
+                    return (
+                      <div
+                        key={i}
+                        className={`flex flex-col items-center transition-all duration-500 ${
+                          i <= step ? "text-purple-400" : "text-purple-900"
+                        }`}
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-500 ${
+                            i <= step
+                              ? "bg-purple-500 shadow-[0_0_10px_rgba(99,0,199,0.5)]"
+                              : "bg-purple-900/30"
+                          }`}
+                        >
+                          <Icon
+                            size={20}
+                            className={
+                              i <= step ? "text-black" : "text-purple-700"
+                            }
+                          />
+                        </div>
+                        <span className="text-xs mt-1">{icon.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Form Steps with Enhanced Styling */}
+                <div className="relative min-h-[200px]">
+                  {/* Step 1 */}
+                  <div
+                    className={`absolute w-full transition-all duration-500 ${
+                      step === 0
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 translate-x-full pointer-events-none"
+                    }`}
+                  >
+                    <div className="space-y-4">
                       <input
                         type="text"
-                        name="customEvent"
-                        placeholder="Enter your event"
-                        value={formData.customEvent || ""}
+                        name="name"
+                        placeholder="Your Name"
+                        value={formData.name}
                         onChange={handleChange}
                         className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
                       />
-                    )}
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Step 3 */}
-                <div
-                  className={`absolute w-full transition-all duration-500 ${
-                    step === 2
-                      ? "opacity-100 translate-x-0"
-                      : step < 2
-                      ? "opacity-0 -translate-x-full pointer-events-none"
-                      : "opacity-0 translate-x-full pointer-events-none"
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <input
-                      type="number"
-                      name="participants"
-                      placeholder="Number of Participants"
-                      value={formData.participants}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                    />
-                    <input
-                      type="text"
-                      name="duration"
-                      placeholder="Performance Duration (minutes)"
-                      value={formData.duration}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Step 4 */}
-                <div
-                  className={`absolute w-full transition-all duration-500 ${
-                    step === 3
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 translate-x-full pointer-events-none"
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <input
-                      type="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                    />
-                    <textarea
-                      name="requirements"
-                      placeholder="Special Requirements"
-                      value={formData.requirements}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none h-24"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Enhanced Navigation Buttons */}
-              <div className="flex justify-between gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={prevStep}
-                  disabled={step === 0}
-                  className={`px-6 py-2 rounded-lg transition-all ${
-                    step === 0
-                      ? "opacity-50 cursor-not-allowed bg-purple-900/20 text-purple-400/50"
-                      : "bg-black border border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:shadow-[0_0_10px_rgba(99,0,199,0.3)]"
-                  }`}
-                >
-                  Back
-                </button>
-
-                {step === 3 ? (
-                  <button
-                    type="submit"
-                    className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                  {/* Step 2 */}
+                  <div
+                    className={`absolute w-full transition-all duration-500 ${
+                      step === 1
+                        ? "opacity-100 translate-x-0"
+                        : step < 1
+                        ? "opacity-0 -translate-x-full pointer-events-none"
+                        : "opacity-0 translate-x-full pointer-events-none"
+                    }`}
                   >
-                    Submit
-                  </button>
-                ) : (
+                    <div className="space-y-4">
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                      />
+                      <select
+                        name="event"
+                        value={formData.event}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all appearance-none"
+                      >
+                        <option value="" className="bg-black">
+                          Select Event
+                        </option>
+                        <option value="dance" className="bg-black">
+                          Classical Dance
+                        </option>
+                        <option value="music" className="bg-black">
+                          Musical Performance
+                        </option>
+                        <option value="drama" className="bg-black">
+                          Drama
+                        </option>
+                        <option value="poetry" className="bg-black">
+                          Poetry
+                        </option>
+                        <option value="other" className="bg-black">
+                          Other
+                        </option>
+                      </select>
+                      {formData.event === "other" && (
+                        <input
+                          type="text"
+                          name="customEvent"
+                          placeholder="Enter your event"
+                          value={formData.customEvent || ""}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div
+                    className={`absolute w-full transition-all duration-500 ${
+                      step === 2
+                        ? "opacity-100 translate-x-0"
+                        : step < 2
+                        ? "opacity-0 -translate-x-full pointer-events-none"
+                        : "opacity-0 translate-x-full pointer-events-none"
+                    }`}
+                  >
+                    <div className="space-y-4">
+                      <input
+                        type="number"
+                        name="participants"
+                        placeholder="Number of Participants"
+                        value={formData.participants}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                      />
+                      <input
+                        type="text"
+                        name="duration"
+                        placeholder="Performance Duration (minutes)"
+                        value={formData.duration}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Step 4 */}
+                  <div
+                    className={`absolute w-full transition-all duration-500 ${
+                      step === 3
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 translate-x-full pointer-events-none"
+                    }`}
+                  >
+                    <div className="space-y-4">
+                      <input
+                        type="date"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                      />
+                      <textarea
+                        name="requirements"
+                        placeholder="Special Requirements"
+                        value={formData.requirements}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg bg-black/50 border border-purple-500/30 text-purple-100 placeholder-purple-400/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none h-24"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Enhanced Navigation Buttons */}
+                <div className="flex justify-between gap-4 pt-4">
                   <button
                     type="button"
-                    onClick={nextStep}
-                    className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                    onClick={prevStep}
+                    disabled={step === 0}
+                    className={`px-6 py-2 rounded-lg transition-all ${
+                      step === 0
+                        ? "opacity-50 cursor-not-allowed bg-purple-900/20 text-purple-400/50"
+                        : "bg-black border border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:shadow-[0_0_10px_rgba(99,0,199,0.3)]"
+                    }`}
                   >
-                    Next
+                    Back
                   </button>
-                )}
-              </div>
-            </form>
+
+                  {step === 3 ? (
+                    <button
+                      type="submit"
+                      className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                    >
+                      Submit
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-all hover:shadow-[0_0_15px_rgba(99,0,199,0.5)]"
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+            <BackButton />
           </div>
-          <BackButton />
+
+          <style jsx global>{`
+            @keyframes float {
+              0%,
+              100% {
+                transform: translateY(0) rotate(0deg);
+              }
+              50% {
+                transform: translateY(-20px) rotate(10deg);
+              }
+            }
+
+            @keyframes shimmer {
+              0% {
+                background-position: 200% 0;
+              }
+              100% {
+                background-position: -200% 0;
+              }
+            }
+
+            .animate-floating {
+              animation: float 6s ease-in-out infinite;
+            }
+          `}</style>
         </div>
-
-        <style jsx global>{`
-          @keyframes float {
-            0%,
-            100% {
-              transform: translateY(0) rotate(0deg);
-            }
-            50% {
-              transform: translateY(-20px) rotate(10deg);
-            }
-          }
-
-          @keyframes shimmer {
-            0% {
-              background-position: 200% 0;
-            }
-            100% {
-              background-position: -200% 0;
-            }
-          }
-
-          .animate-floating {
-            animation: float 6s ease-in-out infinite;
-          }
-        `}</style>
-      </div>
+      )}
     </div>
   );
 };
@@ -2376,7 +2410,8 @@ const TechXtremeApp = () => {
     <div
       className="min-h-screen w-full bg-gradient-to-br from-gray-950 via-black to-gray-900
                flex flex-col justify-center items-center
-               p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16
+               px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16
+               py-6 sm:py-8 md:py-12
                max-w-screen overflow-hidden"
     >
       <CyberpunkFooter />
@@ -2388,7 +2423,7 @@ const TechXtremeApp = () => {
             setActiveRegistration={setActiveRegistration}
           />
         ) : (
-          <>
+          <div className="container">
             {!activeRegistration && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -2397,7 +2432,7 @@ const TechXtremeApp = () => {
                 className="relative z-10 max-w-6xl"
               >
                 {!showCulturalEvents ? (
-                  <>
+                  <div>
                     <CyberpunkTitle />
 
                     <div className="grid grid-cols-2 gap-8 mb-16">
@@ -2452,7 +2487,7 @@ const TechXtremeApp = () => {
                         </span>
                       </button>
                     </div>
-                  </>
+                  </div>
                 ) : (
                   <>
                     <div className="grid grid-cols-2 gap-10">
@@ -2532,7 +2567,7 @@ const TechXtremeApp = () => {
                 )}
               </motion.div>
             )}
-          </>
+          </div>
         )}
       </AnimatePresence>
     </div>

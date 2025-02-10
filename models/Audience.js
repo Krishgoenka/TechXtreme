@@ -8,4 +8,4 @@ const AudienceSchema = new mongoose.Schema({
 });
 
 export default mongoose.models.Audience ||
-  mongoose.model("Audience", AudienceSchema);
+  mongoose.model("Barati", AudienceSchema);

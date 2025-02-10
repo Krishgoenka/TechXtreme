@@ -2417,7 +2417,7 @@ const TechXtremeApp = () => {
   return (
     <div
       className="min-h-screen w-full bg-gradient-to-br from-gray-950 via-black to-gray-900
-               flex flex-col justify-center items-center
+               flex flex-col justify-center items-center overflow-hidden
              "
     >
       <CyberpunkFooter />

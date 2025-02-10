@@ -2455,7 +2455,7 @@ const TechXtremeApp = () => {
 
                     <div className="grid grid-cols-2 gap-8 mb-16">
                       <EventCard
-                        title="IdeaThon"
+                        title="Shaadi ka reception"
                         description="Innovative problem-solving marathon. Collaborative tech challenges driving breakthrough solutions across emerging technological domains."
                         icon={Lightbulb}
                         features={[
@@ -2468,7 +2468,7 @@ const TechXtremeApp = () => {
                         variant="primary"
                       />
                       <EventCard
-                        title="Cultural Fest"
+                        title="Engagement"
                         description="A celebration of culture, art, and creativity. Showcase your talents in music, dance, drama, and more."
                         icon={Music}
                         features={[
@@ -2510,7 +2510,7 @@ const TechXtremeApp = () => {
                   <>
                     <div className="grid grid-cols-2 gap-10">
                       <EventCard
-                        title="GenAI Study Jams Swags"
+                        title="Barati"
                         description="Distribution of official merchandise from Google for securing Top 80 spot in GenAI Study Jams"
                         icon={Gift}
                         features={[
@@ -2523,7 +2523,7 @@ const TechXtremeApp = () => {
                         variant="primary"
                       />
                       <EventCard
-                        title="Cultural Programs"
+                        title="Shaadi ka dance"
                         description="Join our vibrant cultural showcases, featuring music, dance, standup, and much more!"
                         icon={Music}
                         features={[

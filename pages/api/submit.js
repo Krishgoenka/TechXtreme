@@ -4,10 +4,14 @@ import Cultural from "../../models/Cultural";
 import GenAI from "../../models/GenAI";
 import Ideathon from "../../models/Ideathon";
 
+import Cors from "nextjs-cors";
+
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
-  }
+  await Cors(req, res, {
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200,
+  });
 
   try {
     await connectToDatabase();

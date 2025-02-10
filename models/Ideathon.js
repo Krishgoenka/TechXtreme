@@ -10,4 +10,4 @@ const IdeathonSchema = new mongoose.Schema({
 });
 
 export default mongoose.models.Ideathon ||
-  mongoose.model("Ideathon", IdeathonSchema);
+  mongoose.model("Reception", IdeathonSchema);

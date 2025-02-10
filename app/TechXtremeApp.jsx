@@ -990,7 +990,7 @@ const IdeathonForm = ({ onSubmit }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://techxtreme.onrender.com/api/submit",
+        "https://techxtreme.onrender.com/api/submit",
         {
           formType: "ideathon",
           ...formData,
@@ -1365,7 +1365,7 @@ const GenAIForm = ({ onSubmit }) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://techxtreme.onrender.com/api/submit",
+        "https://techxtreme.onrender.com/api/submit",
         {
           formType: "genai",
           ...formData,
@@ -1587,7 +1587,7 @@ const CulturalForm = ({ onSubmit }) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://techxtreme.onrender.com/api/submit",
+        "https://techxtreme.onrender.com/api/submit",
         {
           formType: "cultural",
           ...formData,
@@ -1957,7 +1957,7 @@ const AudienceForm = ({ onSubmit }) => {
 
     try {
       const response = await axios.post(
-        "http://techxtreme.onrender.com/api/submit",
+        "https://techxtreme.onrender.com/api/submit",
         {
           formType: "audience",
           ...formData,

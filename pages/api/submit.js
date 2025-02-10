@@ -4,19 +4,24 @@ import Cultural from "../../models/Cultural";
 import GenAI from "../../models/GenAI";
 import Ideathon from "../../models/Ideathon";
 
-import Cors from "nextjs-cors";
-
 export default async function handler(req, res) {
-  await Cors(req, res, {
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    origin: "*",
-    optionsSuccessStatus: 200,
-  });
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins (*)
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // Handle CORS preflight request
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
 
   try {
-    await connectToDatabase();
-    const { formType, ...formData } = req.body;
+    await connectToDatabase(); // Ensure DB connection
 
+    const { formType, ...formData } = req.body;
     let Model;
 
     switch (formType) {

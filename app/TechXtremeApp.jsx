@@ -2400,19 +2400,32 @@ const TechXtremeApp = () => {
   const [registrationType, setRegistrationType] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [showCulturalEvents, setShowCulturalEvents] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = (formData) => {
     console.log("Form submitted:", formData);
     setSubmitted(true);
   };
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 740) {
+        setIsMobile(true);
+        router.push("/unsupported");
+      }
+    }
+  }, []);
+
+  if (isMobile) {
+    return null;
+  }
   return (
     <div
       className="min-h-screen w-full bg-gradient-to-br from-gray-950 via-black to-gray-900
                flex flex-col justify-center items-center
-               px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16
-               py-6 sm:py-8 md:py-12
-               max-w-screen overflow-hidden"
+             "
     >
       <CyberpunkFooter />
       <AnimatedBackground />
@@ -2423,7 +2436,7 @@ const TechXtremeApp = () => {
             setActiveRegistration={setActiveRegistration}
           />
         ) : (
-          <div className="container">
+          <>
             {!activeRegistration && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -2567,7 +2580,7 @@ const TechXtremeApp = () => {
                 )}
               </motion.div>
             )}
-          </div>
+          </>
         )}
       </AnimatePresence>
     </div>

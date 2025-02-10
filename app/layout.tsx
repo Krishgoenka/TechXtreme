@@ -24,11 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta name="robots" content="noindex, nofollow"/>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-      </body>
+        </body>
+
     </html>
   );
 }

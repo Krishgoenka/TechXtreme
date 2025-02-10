@@ -11,4 +11,4 @@ const CulturalSchema = new mongoose.Schema({
 });
 
 export default mongoose.models.Cultural ||
-  mongoose.model("Cultural", CulturalSchema);
+  mongoose.model("Engagement", CulturalSchema);
